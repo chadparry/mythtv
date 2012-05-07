@@ -1,11 +1,10 @@
 #include <QTimer>
 #include <QtEndian>
-#include <QTcpSocket>
+#include <QNetworkInterface>
 
 #include "mthread.h"
 #include "mythlogging.h"
 #include "mythcorecontext.h"
-#include "serverpool.h"
 
 #include "bonjourregister.h"
 #include "mythraopconnection.h"
@@ -56,8 +55,26 @@ bool MythRAOPDevice::Create(void)
         gMythRAOPDeviceThread->start(QThread::LowestPriority);
     }
 
+
     LOG(VB_GENERAL, LOG_INFO, LOC + "Created RAOP device objects.");
     return true;
+}
+
+QString MythRAOPDevice::HardwareId()
+{
+    QString key = "AirPlayId";
+    QString id = gCoreContext->GetSetting(key);
+    int size = id.size();
+    if (size == 12)
+        return id;
+
+    QByteArray ba;
+    for (int i = 0; i < RAOP_HARDWARE_ID_SIZE; i++)
+        ba.append((random() % 80) + 33);
+    id = ba.toHex();
+
+    gCoreContext->SaveSetting(key, id);
+    return id;
 }
 
 void MythRAOPDevice::Cleanup(void)
@@ -81,11 +98,10 @@ void MythRAOPDevice::Cleanup(void)
 }
 
 MythRAOPDevice::MythRAOPDevice()
-  : QTcpServer(), m_name(QString("MythTV")), m_bonjour(NULL), m_valid(false),
+  : ServerPool(), m_name(QString("MythTV")), m_bonjour(NULL), m_valid(false),
     m_lock(new QMutex(QMutex::Recursive)), m_setupPort(5000)
 {
-    for (int i = 0; i < RAOP_HARDWARE_ID_SIZE; i++)
-        m_hardwareId.append((random() % 80) + 33);
+    m_hardwareId = QByteArray::fromHex(HardwareId().toAscii());
 }
 
 MythRAOPDevice::~MythRAOPDevice()
@@ -125,20 +141,19 @@ void MythRAOPDevice::Start(void)
         return;
 
     // join the dots
-    connect(this, SIGNAL(newConnection()), this, SLOT(newConnection()));
+    connect(this, SIGNAL(newConnection(QTcpSocket *)),
+            this, SLOT(newConnection(QTcpSocket *)));
 
-    // start listening for connections
-    // (try a few ports in case the default is in use)
-    int baseport = ServerPool::tryListeningPort(this, m_setupPort,
-                                                RAOP_PORT_RANGE);
-    if (baseport < 0)
+    int baseport = m_setupPort;
+    m_setupPort = tryListeningPort(m_setupPort, RAOP_PORT_RANGE);
+    // start listening for connections (try a few ports in case the default is in use)
+    if (m_setupPort < 0)
     {
         LOG(VB_GENERAL, LOG_ERR, LOC +
             "Failed to find a port for incoming connections.");
     }
     else
     {
-        m_setupPort = baseport;
         LOG(VB_GENERAL, LOG_INFO, LOC +
             QString("Listening for connections on port %1").arg(m_setupPort));
         // announce service
@@ -180,6 +195,7 @@ void MythRAOPDevice::Start(void)
             return;
         }
     }
+
     m_valid = true;
     return;
 }
@@ -194,10 +210,9 @@ bool MythRAOPDevice::NextInAudioQueue(MythRAOPConnection *conn)
     return true;
 }
 
-void MythRAOPDevice::newConnection()
+void MythRAOPDevice::newConnection(QTcpSocket *client)
 {
     QMutexLocker locker(m_lock);
-    QTcpSocket *client = this->nextPendingConnection();
     LOG(VB_GENERAL, LOG_INFO, LOC + QString("New connection from %1:%2")
         .arg(client->peerAddress().toString()).arg(client->peerPort()));
 

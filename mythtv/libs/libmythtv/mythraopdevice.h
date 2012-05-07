@@ -2,8 +2,8 @@
 #define MYTHRAOPDEVICE_H
 
 #include <QObject>
-#include <QTcpServer>
 
+#include "serverpool.h"
 #include "mythtvexp.h"
 
 class QMutex;
@@ -14,7 +14,7 @@ class MythRAOPConnection;
 #define RAOP_PORT_RANGE 100
 #define RAOP_HARDWARE_ID_SIZE 6
 
-class MTV_PUBLIC MythRAOPDevice : public QTcpServer
+class MTV_PUBLIC MythRAOPDevice : public ServerPool
 {
     Q_OBJECT
 
@@ -24,10 +24,11 @@ class MTV_PUBLIC MythRAOPDevice : public QTcpServer
 
     MythRAOPDevice();
     bool NextInAudioQueue(MythRAOPConnection* conn);
+    static QString HardwareId();
 
   private slots:
     void Start();
-    void newConnection();
+    void newConnection(QTcpSocket *client);
     void deleteClient();
 
   private:

@@ -1,6 +1,5 @@
 #include <QTimer>
 #include <QTcpSocket>
-#include <QUdpSocket>
 #include <QtEndian>
 #include <QTextStream>
 
@@ -144,22 +143,22 @@ bool MythRAOPConnection::Init(void)
     }
 
     // create the data socket
-    m_dataSocket = new QUdpSocket();
-    if (!connect(m_dataSocket, SIGNAL(readyRead()), this, SLOT(udpDataReady())))
+    m_dataSocket = new ServerPool();
+    if (!connect(m_dataSocket, SIGNAL(newDatagram(QByteArray, QHostAddress, quint16)),
+                 this,         SLOT(udpDataReady(QByteArray, QHostAddress, quint16))))
     {
         LOG(VB_GENERAL, LOG_ERR, LOC + "Failed to connect data socket signal.");
         return false;
     }
 
     // try a few ports in case the first is in use
-    int baseport = ServerPool::tryBindingPort(m_dataSocket, m_dataPort,
-                                              RAOP_PORT_RANGE);
-    if (baseport < 0)
+    m_dataPort = m_dataSocket->tryBindingPort(m_dataPort, RAOP_PORT_RANGE);
+    if (m_dataPort < 0)
     {
         LOG(VB_GENERAL, LOG_ERR, LOC + "Failed to bind to a port for data.");
         return false;
     }
-    m_dataPort = baseport;
+
     LOG(VB_GENERAL, LOG_INFO, LOC +
         QString("Bound to port %1 for incoming data").arg(m_dataPort));
 
@@ -185,24 +184,6 @@ bool MythRAOPConnection::Init(void)
  * Socket incoming data signal handler
  * use for audio, control and timing socket
  */
-void MythRAOPConnection::udpDataReady(void)
-{
-    QUdpSocket *socket = dynamic_cast<QUdpSocket*>(sender());
-
-    while (socket->state() == QAbstractSocket::BoundState &&
-           socket->hasPendingDatagrams())
-    {
-        QByteArray buffer;
-        buffer.resize(socket->pendingDatagramSize());
-        QHostAddress sender;
-        quint16 senderPort;
-
-        socket->readDatagram(buffer.data(), buffer.size(),
-                             &sender, &senderPort);
-        udpDataReady(buffer, sender, senderPort);
-    }
-}
-
 void MythRAOPConnection::udpDataReady(QByteArray buf, QHostAddress peer,
                                       quint16 port)
 {
@@ -475,7 +456,7 @@ void MythRAOPConnection::SendTimeRequest(void)
     *(uint32_t *)(req + 24) = qToBigEndian((uint32_t)t.tv_sec);
     *(uint32_t *)(req + 28) = qToBigEndian((uint32_t)t.tv_usec);
 
-    if (m_clientControlSocket->writeDatagram(req, sizeof(req), m_peerAddress, m_clientTimingPort) != sizeof(req))
+    if (m_clientTimingSocket->writeDatagram(req, sizeof(req), m_peerAddress, m_clientTimingPort) != sizeof(req))
     {
         LOG(VB_GENERAL, LOG_ERR, LOC + "Failed to send resend time request.");
         return;
@@ -959,7 +940,7 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
         }
         StartResponse(m_textStream, option, tags["CSeq"]);
         *m_textStream << "Public: ANNOUNCE, SETUP, RECORD, PAUSE, FLUSH, "
-            "TEARDOWN, OPTIONS, GET_PARAMETER, SET_PARAMETER. POST, GET\r\n";
+            "TEARDOWN, OPTIONS, GET_PARAMETER, SET_PARAMETER, POST, GET\r\n";
     }
     else if (option == "ANNOUNCE")
     {
@@ -1058,11 +1039,10 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
                 delete m_clientControlSocket;
             }
 
-            m_clientControlSocket = new QUdpSocket(this);
+            m_clientControlSocket = new ServerPool(this);
             int controlbind_port =
-                ServerPool::tryBindingPort(m_clientControlSocket,
-                                           control_port,
-                                           RAOP_PORT_RANGE);
+                m_clientControlSocket->tryBindingPort(control_port,
+                                                      RAOP_PORT_RANGE);
             if (controlbind_port < 0)
             {
                 LOG(VB_GENERAL, LOG_ERR, LOC +
@@ -1076,8 +1056,10 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
                     .arg(control_port).arg(controlbind_port));
             }
             m_clientControlPort = control_port;
-            connect(m_clientControlSocket, SIGNAL(readyRead()),
-                    this, SLOT(udpDataReady()));
+            connect(m_clientControlSocket,
+                    SIGNAL(newDatagram(QByteArray, QHostAddress, quint16)),
+                    this,
+                    SLOT(udpDataReady(QByteArray, QHostAddress, quint16)));
 
             if (m_clientTimingSocket)
             {
@@ -1086,11 +1068,10 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
                 delete m_clientTimingSocket;
             }
 
-            m_clientTimingSocket = new QUdpSocket(this);
+            m_clientTimingSocket = new ServerPool(this);
             int timingbind_port =
-            ServerPool::tryBindingPort(m_clientTimingSocket,
-                                       timing_port,
-                                       RAOP_PORT_RANGE);
+                m_clientTimingSocket->tryBindingPort(timing_port,
+                                                     RAOP_PORT_RANGE);
             if (timingbind_port < 0)
             {
                 LOG(VB_GENERAL, LOG_ERR, LOC +
@@ -1104,8 +1085,10 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
                     .arg(timing_port).arg(timingbind_port));
             }
             m_clientTimingPort = timing_port;
-            connect(m_clientTimingSocket, SIGNAL(readyRead()),
-                    this, SLOT(udpDataReady()));
+            connect(m_clientTimingSocket,
+                    SIGNAL(newDatagram(QByteArray, QHostAddress, quint16)),
+                    this,
+                    SLOT(udpDataReady(QByteArray, QHostAddress, quint16)));
 
             if (OpenAudioDevice())
                 CreateDecoder();
@@ -1564,4 +1547,3 @@ int64_t MythRAOPConnection::AudioCardLatency(void)
     uint64_t audiots = m_audio->GetAudiotime();
     return (int64_t)timestamp - (int64_t)audiots;
 }
-
