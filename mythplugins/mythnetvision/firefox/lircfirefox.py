@@ -9,6 +9,7 @@ __author__  = 'Patrick Butler'
 __email__   = 'pbutler at killertux org'
 __license__ = "GPLv2"
 
+import lircfirefox_config
 import subprocess
 import sys
 import pylirc
@@ -32,7 +33,7 @@ def main(args):
 def ffox(args):
     ffox = subprocess.Popen(["/usr/bin/firefox"] + args[1:])
     try:
-        if not pylirc.init("firefox", "~/.lircrc", 1):
+        if not pylirc.init("firefox", lircfirefox_config.SHARE_DIR + "/mythnetvision/lirc.firefox", 1):
             return "Failed"
         stop = False
         while not stop:
