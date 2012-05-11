@@ -40,6 +40,27 @@
     </button>
 
     <button>
+        <type>COLBERT</type>
+        <text>Colbert Nation</text>
+        <description>The Colbert Report - Full Episode Video</description>
+        <action>EXEC lircfirefox.py 'http://www.colbertnation.com/full-episodes/'</action>
+    </button>
+
+    <button>
+        <type>DAILY_SHOW</type>
+        <text>The Daily Show</text>
+        <description>The Daily Show with Jon Stewart - Full Episode Video</description>
+        <action>EXEC lircfirefox.py 'http://www.thedailyshow.com/full-episodes'</action>
+    </button>
+
+    <button>
+        <type>AMAZON_VIDEO</type>
+        <text>Amazon Instant Video</text>
+        <description>Amazon.com: Your Video Library </description>
+        <action>EXEC lircfirefox.py 'https://www.amazon.com/gp/video/library'</action>
+    </button>
+
+    <button>
         <type>STREAM</type>
         <text>Play Online Streams</text>
         <description></description>
