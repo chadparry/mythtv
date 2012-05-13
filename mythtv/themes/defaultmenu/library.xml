@@ -56,8 +56,15 @@
     <button>
         <type>AMAZON_VIDEO</type>
         <text>Amazon Instant Video</text>
-        <description>Amazon.com: Your Video Library </description>
+        <description>Amazon.com: Your Video Library</description>
         <action>EXEC lircfirefox.py 'https://www.amazon.com/gp/video/library'</action>
+    </button>
+
+    <button>
+        <type>LDS_CONFERENCE</type>
+        <text>General Conference</text>
+        <description>Watch Sessions of LDS General Conference</description>
+        <action>EXEC lircfirefox.py 'http://www.lds.org/general-conference/sessions/'</action>
     </button>
 
     <button>

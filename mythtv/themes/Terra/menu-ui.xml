@@ -544,6 +544,11 @@
                                 <filename>../default/amazon.jpg</filename>
                             </imagetype>
                         </state>
+                        <state name="LDS_CONFERENCE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/lds-conference.jpg</filename>
+                            </imagetype>
+                        </state>
                     </statetype>
                 </state>
                 <state name="selectedactive" from="active">
@@ -962,6 +967,11 @@
                         <state name="AMAZON_VIDEO" from="default">
                             <imagetype name="icon">
                                 <filename>../default/amazon.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="LDS_CONFERENCE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/lds-conference.jpg</filename>
                             </imagetype>
                         </state>
                     </statetype>
