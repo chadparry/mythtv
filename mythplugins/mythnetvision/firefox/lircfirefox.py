@@ -10,9 +10,9 @@ __email__   = 'pbutler at killertux org'
 __license__ = "GPLv2"
 
 import lircfirefox_config
+import pylirc
 import subprocess
 import sys
-import pylirc
 import time
 
 def main(args):
@@ -48,11 +48,8 @@ def ffox(args):
                 if config[0] == "EXIT":
                     stop = True
                     break
-                if config[0] == "mousestepreset":
-                    mousestep = 0
-                elif config[0] == "mousemove_relative":
-                    if mousestep < 10:
-                        mousestep += 1
+                if config[0] == "mousemove_relative":
+                    mousestep = min(code["repeat"], 10)
                     config[2] = str(int(config[2]) * mousestep ** 2)
                     config[3] = str(int(config[3]) * mousestep ** 2)
                 subprocess.Popen(["xdotool"] + config)
