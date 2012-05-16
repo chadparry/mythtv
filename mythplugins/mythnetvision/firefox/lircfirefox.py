@@ -9,11 +9,16 @@ __author__  = 'Patrick Butler'
 __email__   = 'pbutler at killertux org'
 __license__ = "GPLv2"
 
+import alsaaudio
 import lircfirefox_config
 import pylirc
 import subprocess
 import sys
 import time
+
+VOLUME_MIN = 0L
+VOLUME_MAX = 100L
+VOLUME_STEP = 5L
 
 def main(args):
     """
@@ -32,6 +37,7 @@ def main(args):
 
 def ffox(args):
     ffox = subprocess.Popen(["/usr/bin/firefox"] + args[1:])
+    mixer = alsaaudio.Mixer()
     try:
         if not pylirc.init("firefox", lircfirefox_config.SHARE_DIR + "/mythnetvision/lirc.firefox", 1):
             return "Failed"
@@ -48,6 +54,20 @@ def ffox(args):
                 if config[0] == "EXIT":
                     stop = True
                     break
+                if config[0] == "VOLUME_UP":
+                    volume = mixer.getvolume()[0]
+                    volume = min(volume + VOLUME_STEP, VOLUME_MAX)
+                    mixer.setvolume(volume)
+                    break
+                if config[0] == "VOLUME_DOWN":
+                    volume = mixer.getvolume()[0]
+                    volume = max(volume - VOLUME_STEP, VOLUME_MIN)
+                    mixer.setvolume(volume)
+                    break
+                if config[0] == "MUTE":
+                    mute = bool(mixer.getmute()[0])
+                    mute = not mute
+                    mixer.setmute(long(mute))
                 if config[0] == "mousemove_relative":
                     mousestep = min(code["repeat"], 10)
                     config[2] = str(int(config[2]) * mousestep ** 2)
@@ -72,6 +92,9 @@ def ffox(args):
     # Okay now we can forcibly kill it
     if ffox.poll() is None:
         ffox.terminate()
+
+    mixer.setmute(long(False))
+    mixer.setvolume(VOLUME_MAX)
 
     return 0
 
