@@ -11,7 +11,9 @@ __license__ = "GPLv2"
 
 import alsaaudio
 import lircfirefox_config
+import os
 import pylirc
+import signal
 import subprocess
 import sys
 import time
@@ -77,7 +79,14 @@ def ffox(args):
                 subprocess.Popen(["xdotool"] + config)
     except KeyboardInterrupt:
         print "Exiting...."
-    p1 = subprocess.Popen(["xdotool", "search", "--title", "Mozilla Firefox"], stdout = subprocess.PIPE)
+
+    # Locate child processes
+    ps_command = subprocess.Popen(["ps", "-o", "pid", "--ppid", str(ffox.pid), "--noheaders"], stdout = subprocess.PIPE)
+    ps_output = ps_command.stdout.read()
+    ps_command.wait()
+    children = map(int, ps_output.split("\n")[:-1])
+
+    p1 = subprocess.Popen(["xdotool", "search", "--all", "--pid", str(ffox.pid), "--name", "Mozilla Firefox"], stdout = subprocess.PIPE)
     p1.wait()
     windows = p1.stdout.readline().split()
     for window in windows:
@@ -92,8 +101,16 @@ def ffox(args):
             if ffox.poll() is not None:
                 break
     # Okay now we can forcibly kill it
-    if ffox.poll() is None:
+    try:
         ffox.terminate()
+    except OSError:
+        pass
+    #print "Killing children: %s" % children
+    for child in children:
+        try:
+            os.kill(child, signal.SIGTERM)
+        except OSError:
+            pass
 
     mixer.setmute(long(False))
     mixer.setvolume(VOLUME_MAX)
