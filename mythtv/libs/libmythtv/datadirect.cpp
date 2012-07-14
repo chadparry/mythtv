@@ -975,6 +975,7 @@ void authenticationCallback(QNetworkReply *reply, QAuthenticator *auth,
 void DataDirectProcessor::authenticationCallback(QNetworkReply *reply,
                                                  QAuthenticator *auth)
 {
+    LOG(VB_FILE, LOG_DEBUG, "DataDirect auth callback");
     (void)reply;
     auth->setUser(GetUserID());
     auth->setPassword(GetPassword());
@@ -1237,7 +1238,7 @@ void DataDirectProcessor::CreateATempTable(const QString &ptablename,
     MSqlQuery query(MSqlQuery::DDCon());
     QString querystr;
     querystr = "CREATE TEMPORARY TABLE IF NOT EXISTS " + ptablename + " " +
-        ptablestruct + ";";
+        ptablestruct + " ENGINE=MyISAM;";
 
     if (!query.exec(querystr))
         MythDB::DBError("Creating temporary table", query);

@@ -1712,7 +1712,8 @@ bool PlaybackBox::UpdateUILists(void)
                 }
 
                 if ((m_viewMask & VIEW_WATCHLIST) &&
-                    (p->GetRecordingGroup() != "LiveTV"))
+                    p->GetRecordingGroup() != "LiveTV" &&
+                    p->GetRecordingGroup() != "Deleted")
                 {
                     if (m_watchListAutoExpire && !p->IsAutoExpirable())
                     {
@@ -2628,6 +2629,7 @@ void PlaybackBox::ShowAvailabilityPopup(const ProgramInfo &pginfo)
             ShowOkPopup(tr("Recording Unavailable\n") + msg +
                         tr("This recording is currently being "
                            "deleted and is unavailable"));
+            break;
         case asDeleted:
             ShowOkPopup(tr("Recording Unavailable\n") + msg +
                         tr("This recording has been "
@@ -4155,7 +4157,8 @@ void PlaybackBox::customEvent(QEvent *event)
                 m_artTimer[(uint)type]->start(s_artDelay[(uint)type]);
             }
         }
-        else if (message == "EXIT_TO_MENU")
+        else if (message == "EXIT_TO_MENU" ||
+                 message == "CANCEL_PLAYLIST")
         {
             m_playListPlay.clear();
         }
