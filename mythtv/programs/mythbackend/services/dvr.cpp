@@ -35,6 +35,7 @@
 #include "remoteutil.h"
 
 #include "serviceUtil.h"
+#include <mythscheduler.h>
 
 extern QMap<int, EncoderLink *> tvList;
 extern AutoExpire  *expirer;
@@ -162,10 +163,10 @@ DTC::Program* Dvr::GetRecorded( int              nChanId,
     if (nChanId <= 0 || !dStartTime.isValid())
         throw( QString("Channel ID or StartTime appears invalid."));
 
-    ProgramInfo *pInfo = new ProgramInfo(nChanId, dStartTime);
+    ProgramInfo pInfo(nChanId, dStartTime);
 
     DTC::Program *pProgram = new DTC::Program();
-    FillProgramInfo( pProgram, pInfo, true );
+    FillProgramInfo( pProgram, &pInfo, true );
 
     return pProgram;
 }
@@ -182,14 +183,14 @@ bool Dvr::RemoveRecorded( int              nChanId,
 
     bool bResult = false;
 
-    ProgramInfo *pInfo = new ProgramInfo(nChanId, dStartTime);
+    ProgramInfo pInfo(nChanId, dStartTime);
 
     QString cmd = QString("DELETE_RECORDING %1 %2")
                 .arg(nChanId)
                 .arg(dStartTime.toString(Qt::ISODate));
     MythEvent me(cmd);
 
-    if (pInfo->HasPathname())
+    if (pInfo.HasPathname())
     {
         gCoreContext->dispatch(me);
         bResult = true;
@@ -361,7 +362,7 @@ DTC::ProgramList* Dvr::GetUpcomingList( int  nStartIndex,
     pPrograms->setAsOf          ( QDateTime::currentDateTime() );
     pPrograms->setVersion       ( MYTH_BINARY_VERSION );
     pPrograms->setProtoVer      ( MYTH_PROTO_VERSION  );
-
+    
     return pPrograms;
 }
 
@@ -453,8 +454,8 @@ int Dvr::AddRecordSchedule   ( int       nChanId,
                                bool      bAutoUserJob4,
                                int       nTranscoder)
 {
-    RecordingInfo *info = new RecordingInfo(nChanId, dStartTime, false);
-    RecordingRule *rule = info->GetRecordingRule();
+    RecordingInfo info(nChanId, dStartTime, false);
+    RecordingRule *rule = info.GetRecordingRule();
 
     if (sType.isEmpty())
         sType = "single";
@@ -468,7 +469,7 @@ int Dvr::AddRecordSchedule   ( int       nChanId,
     if (sDupIn.isEmpty())
         sDupIn = "all";
 
-    rule->m_title = info->GetTitle();
+    rule->m_title = info.GetTitle();
     rule->m_type = recTypeFromString(sType);
     rule->m_searchType = searchTypeFromString(sSearchType);
     rule->m_dupMethod = dupMethodFromString(sDupMethod);
@@ -537,10 +538,10 @@ bool Dvr::RemoveRecordSchedule ( uint nRecordId )
     if (nRecordId <= 0 )
         throw( QString("Record ID appears invalid."));
 
-    RecordingRule *pRule = new RecordingRule();
-    pRule->m_recordID = nRecordId;
+    RecordingRule pRule;
+    pRule.m_recordID = nRecordId;
 
-    bResult = pRule->Delete();
+    bResult = pRule.Delete();
 
     return bResult;
 }
@@ -570,8 +571,6 @@ DTC::RecRuleList* Dvr::GetRecordScheduleList( int nStartIndex,
             DTC::RecRule *pRecRule = pRecRules->AddNewRecRule();
 
             FillRecRuleInfo( pRecRule, info->GetRecordingRule() );
-
-            delete info;
         }
     }
 
@@ -584,6 +583,12 @@ DTC::RecRuleList* Dvr::GetRecordScheduleList( int nStartIndex,
     pRecRules->setVersion       ( MYTH_BINARY_VERSION );
     pRecRules->setProtoVer      ( MYTH_PROTO_VERSION  );
 
+    while (!recList.empty())
+    {
+        delete recList.back();
+        recList.pop_back();
+    }
+    
     return pRecRules;
 }
 
@@ -592,12 +597,12 @@ DTC::RecRule* Dvr::GetRecordSchedule( uint nRecordId )
     if (nRecordId <= 0 )
         throw( QString("Record ID appears invalid."));
 
-    RecordingRule *pRule = new RecordingRule();
-    pRule->m_recordID = nRecordId;
-    pRule->Load();
+    RecordingRule rule;
+    rule.m_recordID = nRecordId;
+    rule.Load();
 
     DTC::RecRule *pRecRule = new DTC::RecRule();
-    FillRecRuleInfo( pRecRule, pRule );
+    FillRecRuleInfo( pRecRule, &rule );
 
     return pRecRule;
 }
@@ -609,14 +614,14 @@ bool Dvr::EnableRecordSchedule ( uint nRecordId )
     if (nRecordId <= 0 )
         throw( QString("Record ID appears invalid."));
 
-    RecordingRule *pRule = new RecordingRule();
-    pRule->m_recordID = nRecordId;
-    pRule->Load();
+    RecordingRule pRule;
+    pRule.m_recordID = nRecordId;
+    pRule.Load();
 
-    if (pRule->IsLoaded())
+    if (pRule.IsLoaded())
     {
-        pRule->m_isInactive = false;
-        pRule->Save();
+        pRule.m_isInactive = false;
+        pRule.Save();
         bResult = true;
     }
 
@@ -630,14 +635,14 @@ bool Dvr::DisableRecordSchedule( uint nRecordId )
     if (nRecordId <= 0 )
         throw( QString("Record ID appears invalid."));
 
-    RecordingRule *pRule = new RecordingRule();
-    pRule->m_recordID = nRecordId;
-    pRule->Load();
+    RecordingRule pRule;
+    pRule.m_recordID = nRecordId;
+    pRule.Load();
 
-    if (pRule->IsLoaded())
+    if (pRule.IsLoaded())
     {
-        pRule->m_isInactive = true;
-        pRule->Save();
+        pRule.m_isInactive = true;
+        pRule.Save();
         bResult = true;
     }
 
