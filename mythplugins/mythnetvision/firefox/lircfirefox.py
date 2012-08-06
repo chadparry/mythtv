@@ -40,8 +40,9 @@ def main(args):
 
 def ffox(args):
     ffox = subprocess.Popen(["/usr/bin/firefox"] + args[1:])
-    mixer = alsaaudio.Mixer()
-    mixer.setvolume(VOLUME_DEFAULT)
+    mixer = alsaaudio.Mixer(control='Default')
+    lastvolume = mixer.getvolume()[0]
+    mute = lastvolume == 0
     try:
         if not pylirc.init("firefox", lircfirefox_config.SHARE_DIR + "/mythnetvision/lirc.firefox", 1):
             return "Failed"
@@ -59,7 +60,11 @@ def ffox(args):
                     stop = True
                     break
                 if config[0] == "VOLUME_UP":
-                    volume = mixer.getvolume()[0]
+                    if mute:
+                        mute = False
+                        volume = lastvolume
+                    else:
+                        volume = mixer.getvolume()[0]
                     volume = min(volume + VOLUME_STEP, VOLUME_MAX)
                     mixer.setvolume(volume)
                     break
@@ -69,9 +74,15 @@ def ffox(args):
                     mixer.setvolume(volume)
                     break
                 if config[0] == "MUTE":
-                    mute = bool(mixer.getmute()[0])
                     mute = not mute
-                    mixer.setmute(long(mute))
+                    if mute:
+                        volume = VOLUME_MIN
+                        lastvolume = mixer.getvolume()[0]
+                    elif lastvolume == VOLUME_MIN:
+                        volume = VOLUME_DEFAULT
+                    else:
+                        volume = lastvolume
+                    mixer.setvolume(volume)
                 if config[0] == "mousemove_relative":
                     mousestep = min(code["repeat"], 10)
                     config[2] = str(int(config[2]) * mousestep ** 2)
@@ -112,9 +123,6 @@ def ffox(args):
             os.kill(child, signal.SIGTERM)
         except OSError:
             pass
-
-    mixer.setmute(long(False))
-    mixer.setvolume(VOLUME_MAX)
 
     return 0
 
