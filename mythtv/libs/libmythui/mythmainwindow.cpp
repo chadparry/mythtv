@@ -2607,12 +2607,16 @@ void MythMainWindow::IdleTimeout(void)
         LOG(VB_GENERAL, LOG_NOTICE, QString("Entering standby mode after "
                                         "%1 minutes of inactivity")
                                         .arg(idletimeout));
+/*
         EnterStandby(false);
         if (gCoreContext->GetNumSetting("idleTimeoutSecs", 0))
         {
             d->enteringStandby = true;
             JumpTo("Standby Mode");
         }
+*/
+        // Jump to the random slideshow instead of standby mode!
+        JumpTo("Random Slideshow");
     }
 }
 
