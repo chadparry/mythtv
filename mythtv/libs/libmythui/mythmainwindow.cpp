@@ -2534,10 +2534,13 @@ void MythMainWindow::StartLIRC(void)
 
 void MythMainWindow::LockInputDevices( bool locked )
 {
-    if( locked )
+    if( locked ) {
         LOG(VB_GENERAL, LOG_INFO, "Locking input devices");
-    else
+        PauseIdleTimer(true);
+    } else {
         LOG(VB_GENERAL, LOG_INFO, "Unlocking input devices");
+        PauseIdleTimer(false);
+    }
 
 #ifdef USE_LIRC
     d->ignore_lirc_keys = locked;
