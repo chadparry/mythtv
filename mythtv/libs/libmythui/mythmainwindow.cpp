@@ -2619,6 +2619,7 @@ void MythMainWindow::IdleTimeout(void)
         }
 */
         // Jump to the random slideshow instead of standby mode!
+        PauseIdleTimer(false);
         JumpTo("Random Slideshow");
     }
 }
