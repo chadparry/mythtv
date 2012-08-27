@@ -16,6 +16,20 @@
     </button>
 
     <button>
+        <type>PARRY_CHANNEL</type>
+        <text>Parry Channel</text>
+        <description>Watch random home videos</description>
+        <action>EXEC /home/mythtv/bin/play-all</action>
+    </button>
+
+    <button>
+        <type>PARRY_CHANNEL_KIDS</type>
+        <text>Parry Channel - Kids</text>
+        <description>Watch random home videos for kids</description>
+        <action>EXEC /home/mythtv/bin/play-all-kids</action>
+    </button>
+
+    <button>
         <type>MUSIC_PLAY</type>
         <text>Listen to Music</text>
         <description>Browse your music library</description>

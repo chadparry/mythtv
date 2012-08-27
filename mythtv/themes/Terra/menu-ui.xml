@@ -529,6 +529,16 @@
                                 <filename>watermarks/internet.jpg</filename>
                             </imagetype>
                         </state>
+                        <state name="PARRY_CHANNEL" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/wedding.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="PARRY_CHANNEL_KIDS" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/kids.jpg</filename>
+                            </imagetype>
+                        </state>
                         <state name="COLBERT" from="default">
                             <imagetype name="icon">
                                 <filename>../default/colbert.jpg</filename>
@@ -952,6 +962,16 @@
                         <state name="NET_VIDEO" from="default">
                             <imagetype name="icon">
                                 <filename>watermarks/internet.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="PARRY_CHANNEL" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/wedding.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="PARRY_CHANNEL_KIDS" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/kids.jpg</filename>
                             </imagetype>
                         </state>
                         <state name="COLBERT" from="default">
