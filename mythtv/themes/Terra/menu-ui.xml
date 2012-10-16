@@ -559,6 +559,11 @@
                                 <filename>../default/lds-conference.jpg</filename>
                             </imagetype>
                         </state>
+                        <state name="DOWNTON_ABBEY" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/downton-abbey.jpg</filename>
+                            </imagetype>
+                        </state>
                     </statetype>
                 </state>
                 <state name="selectedactive" from="active">
@@ -992,6 +997,11 @@
                         <state name="LDS_CONFERENCE" from="default">
                             <imagetype name="icon">
                                 <filename>../default/lds-conference.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="DOWNTON_ABBEY" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/downton-abbey.jpg</filename>
                             </imagetype>
                         </state>
                     </statetype>
