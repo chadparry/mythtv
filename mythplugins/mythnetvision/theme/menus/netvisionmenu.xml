@@ -44,4 +44,11 @@
         <action>EXEC lircfirefox.py 'http://www.lds.org/general-conference/sessions/'</action>
     </button>
 
+    <button>
+        <type>DOWNTON_ABBEY</type>
+        <text>Downton Abbey</text>
+        <description>Season 3 episodes via Utah Sweet Savings</description>
+        <action>EXEC lircfirefox.py 'http://utahsweetsavings.com/2012/09/dowton-abby-season-3-watch-it-now/'</action>
+    </button>
+
 </mythmenu>
