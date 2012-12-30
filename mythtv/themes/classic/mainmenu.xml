@@ -105,4 +105,11 @@
         <password>SetupPinCode</password>
     </button>
 
+    <button>
+        <type>MENU_AUDIOBOOKS</type>
+        <text>Audiobooks</text>
+        <description>Play audiobooks</description>
+        <action>MENU audiobooks_menu.xml</action>
+    </button>
+
 </mythmenu>
