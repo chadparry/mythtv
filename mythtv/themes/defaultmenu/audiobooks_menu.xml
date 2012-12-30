@@ -71,4 +71,11 @@
         <action>EXEC /home/mythtv/bin/play-audiobook 'Snow White and the Seven Dwarfs.flac'</action>
     </button>
 
+    <button>
+        <type>LITTLE_PIGGY_RESCUE</type>
+        <text>Little Piggy Rescue!</text>
+        <description>The Wonder Pets!</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Little Piggy Rescue!.flac'</action>
+    </button>
+
 </mythmenu>
