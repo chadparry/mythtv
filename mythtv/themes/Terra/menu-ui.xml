@@ -619,6 +619,11 @@
                                 <filename>../default/audiobooks/Snow White and the Seven Dwarfs.jpg</filename>
                             </imagetype>
                         </state>
+                        <state name="LITTLE_PIGGY_RESCUE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Little Piggy Rescue!.jpg</filename>
+                            </imagetype>
+                        </state>
                     </statetype>
                 </state>
                 <state name="selectedactive" from="active">
@@ -1112,6 +1117,11 @@
                         <state name="SNOW_WHITE_AND_THE_SEVEN_DWARFS" from="default">
                             <imagetype name="icon">
                                 <filename>../default/audiobooks/Snow White and the Seven Dwarfs.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="LITTLE_PIGGY_RESCUE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Little Piggy Rescue!.jpg</filename>
                             </imagetype>
                         </state>
                     </statetype>
