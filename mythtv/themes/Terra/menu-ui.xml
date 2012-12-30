@@ -554,6 +554,61 @@
                                 <filename>../default/downton-abbey.jpg</filename>
                             </imagetype>
                         </state>
+                        <state name="MENU_AUDIOBOOKS" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/cover.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE_TAKES_A_JOB" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George Takes a Job.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE_RIDES_A_BIKE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George Rides a Bike.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE_GETS_A_MEDAL" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George Gets a Medal.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE_FLIES_A_KITE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George Flies a Kite.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE_LEARNS_THE_ALPHABET" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George Learns the Alphabet.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE_GOES_TO_THE_HOSPITAL" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George Goes to the Hospital.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="BEAUTY_AND_THE_BEAST" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Beauty and the Beast.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="THE_LITTLE_MERMAID" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/The Little Mermaid.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="SNOW_WHITE_AND_THE_SEVEN_DWARFS" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Snow White and the Seven Dwarfs.jpg</filename>
+                            </imagetype>
+                        </state>
                     </statetype>
                 </state>
                 <state name="selectedactive" from="active">
@@ -982,6 +1037,61 @@
                         <state name="DOWNTON_ABBEY" from="default">
                             <imagetype name="icon">
                                 <filename>../default/downton-abbey.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="MENU_AUDIOBOOKS" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/cover.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE_TAKES_A_JOB" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George Takes a Job.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE_RIDES_A_BIKE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George Rides a Bike.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE_GETS_A_MEDAL" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George Gets a Medal.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE_FLIES_A_KITE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George Flies a Kite.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE_LEARNS_THE_ALPHABET" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George Learns the Alphabet.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CURIOUS_GEORGE_GOES_TO_THE_HOSPITAL" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Curious George Goes to the Hospital.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="BEAUTY_AND_THE_BEAST" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Beauty and the Beast.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="THE_LITTLE_MERMAID" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/The Little Mermaid.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="SNOW_WHITE_AND_THE_SEVEN_DWARFS" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Snow White and the Seven Dwarfs.jpg</filename>
                             </imagetype>
                         </state>
                     </statetype>
