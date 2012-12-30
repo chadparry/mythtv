@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<mythmenu name="AUDIOBOOKS">
+
+    <button>
+        <type>CURIOUS_GEORGE</type>
+        <text>Curious George</text>
+        <description>The Complete Adventures of Curious George, page 3</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George (with page-turn signals).flac'</action>
+    </button>
+
+    <button>
+        <type>CURIOUS_GEORGE_TAKES_A_JOB</type>
+        <text>Curious George Takes a Job</text>
+        <description>The Complete Adventures of Curious George, page 57</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George Takes a Job (with page-turn signals).flac'</action>
+    </button>
+
+    <button>
+        <type>CURIOUS_GEORGE_RIDES_A_BIKE</type>
+        <text>Curious George Rides a Bike</text>
+        <description>The Complete Adventures of Curious George, page 105</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George Rides a Bike (with page-turn signals).flac'</action>
+    </button>
+
+    <button>
+        <type>CURIOUS_GEORGE_GETS_A_MEDAL</type>
+        <text>Curious George Gets a Medal</text>
+        <description>The Complete Adventures of Curious George, page 153</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George Gets a Medal (with page-turn signals).flac'</action>
+    </button>
+
+    <button>
+        <type>CURIOUS_GEORGE_FLIES_A_KITE</type>
+        <text>Curious George Flies a Kite</text>
+        <description>The Complete Adventures of Curious George, page 201</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George Flies a Kite (with page-turn signals).flac'</action>
+    </button>
+
+    <button>
+        <type>CURIOUS_GEORGE_LEARNS_THE_ALPHABET</type>
+        <text>Curious George Learns the Alphabet</text>
+        <description>The Complete Adventures of Curious George, page 281</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George Learns the Alphabet (with page-turn signals).flac'</action>
+    </button>
+
+    <button>
+        <type>CURIOUS_GEORGE_GOES_TO_THE_HOSPITAL</type>
+        <text>Curious George Goes to the Hospital</text>
+        <description>The Complete Adventures of Curious George, page 353</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George Goes to the Hospital (with page-turn signals).flac'</action>
+    </button>
+
+    <button>
+        <type>BEAUTY_AND_THE_BEAST</type>
+        <text>Beauty and the Beast</text>
+        <description>Enchanting Tales, page 6</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Beauty and the Beast.flac'</action>
+    </button>
+
+    <button>
+        <type>THE_LITTLE_MERMAID</type>
+        <text>The Little Mermaid</text>
+        <description>Enchanting Tales, page 42</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'The Little Mermaid.flac'</action>
+    </button>
+
+    <button>
+        <type>SNOW_WHITE_AND_THE_SEVEN_DWARFS</type>
+        <text>Snow White and the Seven Dwarfs</text>
+        <description>Enchanting Tales, page 84</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Snow White and the Seven Dwarfs.flac'</action>
+    </button>
+
+</mythmenu>
