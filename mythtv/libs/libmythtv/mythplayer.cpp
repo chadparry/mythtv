@@ -3526,12 +3526,12 @@ void MythPlayer::SetWatched(bool forceWatched)
              video_frame_rate);
     }
 
-    int offset = (int) round(0.14 * (numFrames / video_frame_rate));
+    int offset = (int) round(0.25 * (numFrames / video_frame_rate));
 
     if (offset < 240)
         offset = 240; // 4 Minutes Min
     else if (offset > 720)
-        offset = 720; // 12 Minutes Max
+        offset = 1200; // 20 Minutes Max
 
     if (forceWatched || framesPlayed > numFrames - (offset * video_frame_rate))
     {
