@@ -108,6 +108,7 @@ def buildList(query, opts):
     # replace all dashes from queries to work around search behavior
     # as negative to all text that comes afterwards
     query = query.replace('-',' ')
+    query = query.replace('?',' ')
 
     from MythTV.tmdb3 import searchMovie
     from MythTV import VideoMetadata
