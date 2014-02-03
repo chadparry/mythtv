@@ -45,10 +45,10 @@
     </button>
 
     <button>
-        <type>DOWNTON_ABBEY</type>
-        <text>Downton Abbey</text>
-        <description>Online episodes via ITV</description>
-        <action>EXEC lircfirefox.py 'https://www.itv.com/itvplayer/downton-abbey/'</action>
+        <type>SESAME_STREET</type>
+        <text>Sesame Street</text>
+        <description>Sesame Street Videos</description>
+        <action>EXEC lircfirefox.py 'http://www.sesamestreet.org/videos'</action>
     </button>
 
 </mythmenu>
