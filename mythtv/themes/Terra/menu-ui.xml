@@ -549,9 +549,9 @@
                                 <filename>../default/lds-conference.jpg</filename>
                             </imagetype>
                         </state>
-                        <state name="DOWNTON_ABBEY" from="default">
+                        <state name="SESAME_STREET" from="default">
                             <imagetype name="icon">
-                                <filename>../default/downton-abbey.jpg</filename>
+                                <filename>../default/sesame-street.jpg</filename>
                             </imagetype>
                         </state>
                         <state name="MENU_AUDIOBOOKS" from="default">
@@ -1039,9 +1039,9 @@
                                 <filename>../default/lds-conference.jpg</filename>
                             </imagetype>
                         </state>
-                        <state name="DOWNTON_ABBEY" from="default">
+                        <state name="SESAME_STREET" from="default">
                             <imagetype name="icon">
-                                <filename>../default/downton-abbey.jpg</filename>
+                                <filename>../default/sesame-street.jpg</filename>
                             </imagetype>
                         </state>
                         <state name="MENU_AUDIOBOOKS" from="default">
