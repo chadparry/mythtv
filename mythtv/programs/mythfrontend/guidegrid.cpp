@@ -27,6 +27,7 @@ using namespace std;
 #include "remoteutil.h"
 #include "channelutil.h"
 #include "cardutil.h"
+#include "tvremoteutil.h"
 #include "mythuibuttonlist.h"
 #include "mythuiguidegrid.h"
 #include "mythdialogbox.h"
@@ -441,9 +442,28 @@ void GuideGrid::RunProgramGuide(uint chanid, const QString &channum,
         return;
     }
 
+    // If chanid/channum are unset, find the channel that would
+    // naturally be selected when Live TV is started.  This depends on
+    // the available tuners, their cardinput.livetvorder values, and
+    // their cardinput.startchan values.
+    QString actualChannum = channum;
+    if (chanid == 0 && actualChannum.isEmpty())
+    {
+        uint defaultChanid = gCoreContext->GetNumSetting("DefaultChanid", 0);
+        if (defaultChanid && TV::IsTunable(defaultChanid))
+            chanid = defaultChanid;
+    }
+    if (chanid == 0 && actualChannum.isEmpty())
+    {
+        vector<uint> excluded_cardids;
+        vector<uint> inputIDs = RemoteRequestFreeInputList(excluded_cardids);
+        if (!inputIDs.empty())
+            actualChannum = CardUtil::GetStartingChannel(inputIDs[0]);
+    }
+
     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
     GuideGrid *gg = new GuideGrid(mainStack,
-                                  chanid, channum, startTime,
+                                  chanid, actualChannum, startTime,
                                   player, embedVideo, allowFinder,
                                   changrpid);
 
@@ -836,6 +856,17 @@ bool GuideGrid::keyPressEvent(QKeyEvent *event)
     return handled;
 }
 
+static bool SelectionIsTunable(const ChannelInfoList &selection)
+{
+    bool isTunable = false;
+    for (int i = 0; i < selection.size(); ++i)
+    {
+        if (TV::IsTunable(selection[i].chanid))
+            return true;
+    }
+    return false;
+}
+
 void GuideGrid::ShowMenu(void)
 {
     QString label = tr("Guide Options");
@@ -850,6 +881,8 @@ void GuideGrid::ShowMenu(void)
 
         if (m_player && (m_player->GetState(-1) == kState_WatchingLiveTV))
             menuPopup->AddButton(tr("Change to Channel"));
+        else if (SelectionIsTunable(GetSelection()))
+            menuPopup->AddButton(tr("Watch This Channel"));
 
         menuPopup->AddButton(tr("Record This"));
 
@@ -1179,7 +1212,7 @@ void GuideGrid::fillChannelInfos(bool gotostartchannel)
 
     if (gotostartchannel)
     {
-        int ch = FindChannel(m_startChanID, m_startChanNum);
+        int ch = FindChannel(m_startChanID, m_startChanNum, false);
         m_currentStartChannel = (uint) max(0, ch);
     }
 
@@ -1238,52 +1271,20 @@ int GuideGrid::FindChannel(uint chanid, const QString &channum,
     if (exact || channum.isEmpty())
         return -1;
 
-    // then check partial channum, first only
-    for (i = 0; i < GetChannelCount(); ++i)
-    {
-        if (m_channelInfos[i][0].channum.left(channum.length()) == channum)
-            return i;
-    }
-
-    // then check all partial channum
+    ChannelInfoList list;
+    QVector<int> idxList;
     for (i = 0; i < GetChannelCount(); ++i)
     {
         for (uint j = 0; j < m_channelInfos[i].size(); ++j)
         {
-            if (m_channelInfos[i][j].channum.left(channum.length()) == channum)
-                return i;
+            list.push_back(m_channelInfos[i][j]);
+            idxList.push_back(i);
         }
     }
-
-    // then check all channum with "_" for subchannels
-    QMutexLocker locker(&chanSepRegExpLock);
-    QString tmpchannum = channum;
-    if (tmpchannum.contains(chanSepRegExp))
-    {
-        tmpchannum.replace(chanSepRegExp, "_");
-    }
-    else if (channum.length() >= 2)
-    {
-        tmpchannum = channum.left(channum.length() - 1) + '_' +
-            channum.right(1);
-    }
-    else
-    {
-        return -1;
-    }
-
-    for (i = 0; i < GetChannelCount(); ++i)
-    {
-        for (uint j = 0; j < m_channelInfos[i].size(); ++j)
-        {
-            QString tmp = m_channelInfos[i][j].channum;
-            tmp.replace(chanSepRegExp, "_");
-            if (tmp == tmpchannum)
-                return i;
-        }
-    }
-
-    return -1;
+    int result = ChannelUtil::GetNearestChannel(list, channum);
+    if (result >= 0)
+        result = idxList[result];
+    return result;
 }
 
 void GuideGrid::fillTimeInfos()
@@ -1695,6 +1696,12 @@ void GuideGrid::customEvent(QEvent *event)
             else if (resulttext == tr("Change to Channel"))
             {
                 enter();
+            }
+            else if (resulttext == tr("Watch This Channel"))
+            {
+                ChannelInfoList selection = GetSelection();
+                if (SelectionIsTunable(selection))
+                    TV::StartTV(NULL, kStartTVNoFlags, selection);
             }
             else if (resulttext == tr("Program Details"))
             {

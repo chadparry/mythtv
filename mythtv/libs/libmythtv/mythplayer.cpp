@@ -372,6 +372,8 @@ bool MythPlayer::Pause(void)
     audio.Pause(true);
     PauseDecoder();
     PauseBuffer();
+    if (!decoderPaused)
+        PauseDecoder(); // Retry in case audio only stream
     allpaused = decoderPaused && videoPaused && bufferPaused;
     {
         if (FlagIsSet(kVideoIsNull) && decoder)
@@ -397,6 +399,7 @@ bool MythPlayer::Play(float speed, bool normal, bool unpauseaudio)
         return false;
     }
 
+    SetEof(kEofStateNone);
     UnpauseBuffer();
     UnpauseDecoder();
     if (unpauseaudio)
@@ -928,7 +931,7 @@ int MythPlayer::OpenFile(uint retries)
     int testreadsize = 2048;
 
     MythTimer bigTimer; bigTimer.start();
-    int timeout = (retries + 1) * 600;
+    int timeout = max((retries + 1) * 500, 15000U);
     while (testreadsize <= kDecoderProbeBufferSize)
     {
         MythTimer peekTimer; peekTimer.start();
@@ -2189,6 +2192,10 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
     // clear the buffering state
     SetBuffering(false);
 
+    // If PiP then release the last shown frame to the decoding queue
+    if (player_ctx->IsPIP())
+        videoOutput->DoneDisplayingFrame(videoOutput->GetLastShownFrame());
+
     // retrieve the next frame
     videoOutput->StartDisplayingFrame();
     VideoFrame *frame = videoOutput->GetLastShownFrame();
@@ -2214,7 +2221,9 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
     osdLock.unlock();
 
     AVSync(frame, 0);
-    videoOutput->DoneDisplayingFrame(frame);
+    // If PiP then keep this frame for MythPlayer::GetCurrentFrame
+    if (!player_ctx->IsPIP())
+        videoOutput->DoneDisplayingFrame(frame);
 }
 
 void MythPlayer::PreProcessNormalFrame(void)
@@ -3760,19 +3769,21 @@ long long MythPlayer::CalcMaxFFTime(long long ffframes, bool setjump) const
         if (behind < maxtime * 3)
             limitKeyRepeat = true;
     }
+    else if (IsPaused())
+    {
+        uint64_t lastFrame  = deleteMap.IsEmpty() ? totalFrames
+                                                 : deleteMap.GetLastFrame();
+        if (framesPlayed + ffframes >= lastFrame)
+            ret = lastFrame - 1 - framesPlayed;
+    }
     else
     {
-        if (totalFrames > 0)
-        {
-            float behind = secsWritten - secsPlayed;
-            if (behind < maxtime)
-                ret = 0;
-            else if (behind - ff <= maxtime * 2)
-            {
-                uint64_t ms = 1000 * (secsWritten - maxtime * 2);
-                ret = TranslatePositionMsToFrame(ms, true) - framesPlayed;
-            }
-        }
+        float secsMax = secsWritten - 2.f * maxtime;
+        if (secsMax <= 0.f)
+            ret = 0;
+        else if (secsMax < secsPlayed + ff)
+            ret = TranslatePositionMsToFrame(1000 * secsMax, true)
+                    - framesPlayed;
     }
 
     return ret;
@@ -4072,7 +4083,9 @@ bool MythPlayer::HandleProgramEditorActions(QStringList &actions)
             if (seekamount == 0) // 1 frame
                 DoRewind(1, kInaccuracyNone);
             else if (seekamount > 0)
-                DoRewindSecs(seekamount, kInaccuracyEditor, false);
+                // Use fully-accurate seeks for less than 1 second.
+                DoRewindSecs(seekamount, seekamount < 1.0 ? kInaccuracyNone :
+                             kInaccuracyEditor, false);
             else
                 HandleArbSeek(false);
         }
@@ -4081,7 +4094,9 @@ bool MythPlayer::HandleProgramEditorActions(QStringList &actions)
             if (seekamount == 0) // 1 frame
                 DoFastForward(1, kInaccuracyNone);
             else if (seekamount > 0)
-                DoFastForwardSecs(seekamount, kInaccuracyEditor, false);
+                // Use fully-accurate seeks for less than 1 second.
+                DoFastForwardSecs(seekamount, seekamount < 1.0 ? kInaccuracyNone :
+                             kInaccuracyEditor, false);
             else
                 HandleArbSeek(true);
         }
@@ -4650,7 +4665,10 @@ bool MythPlayer::TranscodeGetNextFrame(
                 QString("Fast-Forwarding from %1 to %2")
                     .arg(lastDecodedFrameNumber).arg(jumpto));
             if (jumpto >= totalFrames)
+            {
+                SetEof(kEofStateDelayed);
                 return false;
+            }
 
             // For 0.25, move this to DoJumpToFrame(jumpto)
             WaitForSeek(jumpto, 0);

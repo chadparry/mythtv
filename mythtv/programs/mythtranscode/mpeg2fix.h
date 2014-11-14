@@ -149,6 +149,7 @@ class MPEG2fixup
     void ShowRangeMap(frm_dir_map_t *mapPtr, QString msg);
     int BuildKeyframeIndex(QString &file, frm_pos_map_t &posMap, frm_pos_map_t &durMap);
 
+    void SetAllAudio(bool keep) { allaudio = keep; }
 
     static void dec2x33(int64_t *pts1, int64_t pts2);
     static void inc2x33(int64_t *pts1, int64_t pts2);
@@ -218,10 +219,14 @@ class MPEG2fixup
     }
     AVCodecContext *getCodecContext(int id)
     {
+        if (id >= inputFC->nb_streams)
+            return NULL;
         return inputFC->streams[id]->codec;
     }
     AVCodecParserContext *getCodecParserContext(int id)
     {
+        if (id >= inputFC->nb_streams)
+            return NULL;
         return inputFC->streams[id]->parser;
     }
 
@@ -260,6 +265,7 @@ class MPEG2fixup
     int no_repeat, fix_PTS, maxframes;
     QString infile;
     const char *format;
+    bool allaudio;
 
     //complete?
     bool file_end;

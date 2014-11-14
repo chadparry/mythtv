@@ -306,8 +306,9 @@ class MTV_PUBLIC TV : public QObject, public MenuItemDisplayer
     static bool IsTVRunning(void);
     static TV*  CurrentTVInstance(void) { return gTV; }
     // Start media playback
-    static bool StartTV(ProgramInfo *tvrec = NULL,
-                        uint flags = kStartTVNoFlags);
+    static bool StartTV(ProgramInfo *tvrec,
+                        uint flags,
+                        const ChannelInfoList &selection = ChannelInfoList());
     static bool IsPaused(void);
 
     // Public event handling
@@ -326,6 +327,7 @@ class MTV_PUBLIC TV : public QObject, public MenuItemDisplayer
     static void ReloadKeys(void);
     static void SetFuncPtr(const char *, void *);
     static int  ConfiguredTunerCards(void);
+    static bool IsTunable(uint chanid);
 
     /// \brief Helper class for Sleep Timer code.
     class SleepTimerInfo
@@ -366,7 +368,7 @@ class MTV_PUBLIC TV : public QObject, public MenuItemDisplayer
     void InitFromDB(void);
 
     // Top level playback methods
-    bool LiveTV(bool showDialogs = true);
+    bool LiveTV(bool showDialogs, const ChannelInfoList &selection);
     bool StartLiveTVInGuide(void) { return db_start_in_guide; }
     int  Playback(const ProgramInfo &rcinfo);
     void PlaybackLoop(void);
@@ -417,9 +419,12 @@ class MTV_PUBLIC TV : public QObject, public MenuItemDisplayer
                       int editType = kScheduleProgramGuide);
     bool StartEmbedding(const QRect&);
     void StopEmbedding(void);
-    bool IsTunable(const PlayerContext*, uint chanid, bool use_cache = false);
+    bool IsTunable(const PlayerContext*, uint chanid,
+                   bool use_cache = false);
     QSet<uint> IsTunableOn(const PlayerContext*, uint chanid,
                            bool use_cache, bool early_exit);
+    static QSet<uint> IsTunableOn(TV *tv, const PlayerContext*, uint chanid,
+                                  bool use_cache, bool early_exit);
     void ClearTunableCache(void);
     void ChangeChannel(const PlayerContext*, const ChannelInfoList &options);
     void DrawUnusedRects(void);
@@ -477,7 +482,8 @@ class MTV_PUBLIC TV : public QObject, public MenuItemDisplayer
                              BookmarkAction bookmark = kBookmarkAuto);
     void SetExitPlayer(bool set_it, bool wants_to);
 
-    bool RequestNextRecorder(PlayerContext *, bool);
+    bool RequestNextRecorder(PlayerContext *, bool,
+                             const ChannelInfoList &sel = ChannelInfoList());
     void DeleteRecorder();
 
     bool StartRecorder(PlayerContext *ctx, int maxWait=-1);
@@ -878,6 +884,8 @@ class MTV_PUBLIC TV : public QObject, public MenuItemDisplayer
     mutable QString queuedChanNum;
     /// Queued ChanID (from EPG channel selector)
     uint            queuedChanID;
+    /// Initial chanid override for Live TV
+    uint            initialChanID;
 
     // Channel changing timeout notification variables
     QTime   lockTimer;

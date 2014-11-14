@@ -72,15 +72,15 @@ UPnpCDSRootInfo UPnpCDSTv::g_RootNodes[] =
         "WHERE category=:KEY", "category" },
 
     {   "By Date",
-        "DATE_FORMAT(starttime, '%Y-%m-%d')",
-        "SELECT  DATE_FORMAT(starttime, '%Y-%m-%d') as id, "
-          "DATE_FORMAT(starttime, '%Y-%m-%d %W') as name, "
-          "count( DATE_FORMAT(starttime, '%Y-%m-%d %W') ) as children "
+        "DATE_FORMAT(CONVERT_TZ(starttime, 'UTC', 'SYSTEM'), '%Y-%m-%d')",
+        "SELECT  DATE_FORMAT(CONVERT_TZ(starttime, 'UTC', 'SYSTEM'), '%Y-%m-%d') as id, "
+          "DATE_FORMAT(CONVERT_TZ(starttime, 'UTC', 'SYSTEM'), '%Y-%m-%d %W') as name, "
+          "count( starttime ) as children "
             "FROM recorded "
             "%1 "
             "GROUP BY name "
             "ORDER BY starttime DESC",
-        "WHERE DATE_FORMAT(starttime, '%Y-%m-%d') =:KEY", "starttime DESC" },
+        "WHERE DATE_FORMAT(CONVERT_TZ(starttime, 'UTC', 'SYSTEM'), '%Y-%m-%d') =:KEY", "starttime DESC" },
 
     {   "By Channel",
         "chanid",
@@ -307,10 +307,10 @@ void UPnpCDSTv::AddItem( const UPnpCDSRequest    *pRequest,
     // ----------------------------------------------------------------------
 
     if (!m_mapBackendIp.contains( sHostName ))
-        m_mapBackendIp[ sHostName ] = gCoreContext->GetSettingOnHost( "BackendServerIp", sHostName);
+        m_mapBackendIp[ sHostName ] = gCoreContext->GetBackendServerIP4(sHostName);
 
     if (!m_mapBackendPort.contains( sHostName ))
-        m_mapBackendPort[ sHostName ] = gCoreContext->GetSettingOnHost("BackendStatusPort", sHostName);
+        m_mapBackendPort[ sHostName ] = gCoreContext->GetBackendStatusPort(sHostName);
 
     // ----------------------------------------------------------------------
     // Build Support Strings
@@ -367,7 +367,7 @@ void UPnpCDSTv::AddItem( const UPnpCDSRequest    *pRequest,
     pItem->SetPropValue( "artist"        , "[Unknown Author]" );
     pItem->SetPropValue( "album"         , "[Unknown Series]" );
     pItem->SetPropValue( "actor"         , "[Unknown Author]" );
-    pItem->SetPropValue( "date"          , dtStartTime.toString(Qt::ISODate));
+    pItem->SetPropValue( "date"          , dtStartTime.toLocalTime().toString(Qt::ISODate));
 
     pResults->Add( pItem );
 
@@ -401,18 +401,17 @@ void UPnpCDSTv::AddItem( const UPnpCDSRequest    *pRequest,
         sMimeType = "video/avi";
     }
 
-
-    // DLNA string below is temp fix for ps3 seeking.
-    QString sProtocol = QString( "http-get:*:%1:DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01500000000000000000000000000000" ).arg( sMimeType  );
-    QString sURI      = QString( "%1GetRecording%2").arg( sURIBase   )
-                                                    .arg( sURIParams );
-
-    // Sony BDPS370 requires a DLNA Profile Name
+    // NOTE: Sony BDPS370 requires a DLNA Profile Name
+    // NOTE: DLNA string below is temp fix for ps3 seeking.
     // FIXME: detection to determine the correct DLNA Profile Name
+    QString sFourthField = "*";
     if (sMimeType == "video/mpeg")
     {
-        sProtocol += ";DLNA.ORG_PN=MPEG_TS_SD_NA_ISO";
+        sFourthField = "DLNA.ORG_PN=MPEG_TS_SD_NA_ISO;DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01500000000000000000000000000000";
     }
+    QString sProtocol = QString( "http-get:*:%1:%2" ).arg( sMimeType ).arg( sFourthField );
+    QString sURI      = QString( "%1GetRecording%2").arg( sURIBase   )
+                                                    .arg( sURIParams );
 
     Resource *pRes = pItem->AddResource( sProtocol, sURI );
 

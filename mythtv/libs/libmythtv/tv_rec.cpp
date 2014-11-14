@@ -2615,8 +2615,8 @@ void TVRec::SpawnLiveTV(LiveTVChain *newchain, bool pip, QString startchan)
     tvchain->ReloadAll();
 
     QString hostprefix = gCoreContext->GenMythURL(
-                    gCoreContext->GetBackendServerIP(),
-                    gCoreContext->GetSetting("BackendServerPort").toInt());
+                    gCoreContext->GetHostName(),
+                    gCoreContext->GetBackendServerPort());
 
     tvchain->SetHostPrefix(hostprefix);
     tvchain->SetCardType(genOpt.cardtype);
@@ -2928,7 +2928,8 @@ void TVRec::ToggleChannelFavorite(QString changroupname)
     {
         LOG(VB_GENERAL, LOG_ERR, LOC +
             QString("Channel: \'%1\' was not found in the database.\n"
-                    "\t\tMost likely, your DefaultTVChannel setting is wrong.\n"
+                    "\t\tMost likely, the 'starting channel' for this "
+                    "Input Connection is invalid.\n"
                     "\t\tCould not toggle favorite.").arg(channum));
         return;
     }
@@ -4460,8 +4461,8 @@ bool TVRec::GetProgramRingBufferForLiveTV(RecordingInfo **pginfo,
         {
             LOG(VB_GENERAL, LOG_ERR, LOC +
                 QString("Channel: \'%1\' was not found in the database.\n"
-                        "\t\tMost likely, your DefaultTVChannel setting is "
-                        "wrong.\n"
+                        "\t\tMost likely, the 'starting channel' for this "
+                        "Input Connection is invalid.\n"
                         "\t\tCould not start livetv.").arg(channum));
             return false;
         }
@@ -4645,6 +4646,10 @@ bool TVRec::SwitchLiveTVRingBuffer(const QString & channum,
         }
         curRecording = pginfo;
         SetRingBuffer(rb);
+    }
+    else
+    {
+        delete rb;
     }
 
     return true;

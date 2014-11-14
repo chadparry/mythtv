@@ -307,7 +307,8 @@ void TV::StopPlayback(void)
 /**
  * \brief returns true if the recording completed when exiting.
  */
-bool TV::StartTV(ProgramInfo *tvrec, uint flags)
+bool TV::StartTV(ProgramInfo *tvrec, uint flags,
+                 const ChannelInfoList &selection)
 {
     TV *tv = GetTV();
     if (!tv)
@@ -376,7 +377,7 @@ bool TV::StartTV(ProgramInfo *tvrec, uint flags)
         else if (RemoteGetFreeRecorderCount())
         {
             LOG(VB_PLAYBACK, LOG_INFO, LOC + "tv->LiveTV() -- begin");
-            if (!tv->LiveTV(showDialogs))
+            if (!tv->LiveTV(showDialogs, selection))
             {
                 tv->SetExitPlayer(true, true);
                 quitAll = true;
@@ -437,6 +438,7 @@ bool TV::StartTV(ProgramInfo *tvrec, uint flags)
             mctx->UnlockDeletePlayer(__FILE__, __LINE__);
         }
         tv->ReturnPlayerLock(mctx);
+        quitAll |= !playerError.isEmpty();
     }
 
     LOG(VB_PLAYBACK, LOG_INFO, LOC + "StartTV -- process events 2 begin");
@@ -577,6 +579,8 @@ void TV::InitKeys(void)
             "Change Recording Group"), "");
     REG_KEY("TV Frontend", "CHANGEGROUPVIEW", QT_TRANSLATE_NOOP("MythControls",
             "Change Group View"), "");
+    REG_KEY("TV Frontend", ACTION_LISTRECORDEDEPISODES, QT_TRANSLATE_NOOP("MythControls",
+            "List recorded episodes"), "");
 
     REG_KEY("TV Playback", "BACK", QT_TRANSLATE_NOOP("MythControls",
             "Exit or return to DVD menu"), "Esc");
@@ -1022,6 +1026,7 @@ TV::TV(void)
       asInputMode(false),
       // Channel changing state variables
       queuedChanNum(""),
+      initialChanID(0),
       lockTimerOn(false),
       // channel browsing
       browsehelper(NULL),
@@ -1678,7 +1683,7 @@ TVState TV::GetState(const PlayerContext *actx) const
  *  \brief Starts LiveTV
  *  \param showDialogs if true error dialogs are shown, if false they are not
  */
-bool TV::LiveTV(bool showDialogs)
+bool TV::LiveTV(bool showDialogs, const ChannelInfoList &selection)
 {
     requestDelete = false;
     allowRerecord = false;
@@ -1686,7 +1691,7 @@ bool TV::LiveTV(bool showDialogs)
 
     PlayerContext *actx = GetPlayerReadLock(-1, __FILE__, __LINE__);
     if (actx->GetState() == kState_None &&
-        RequestNextRecorder(actx, showDialogs))
+        RequestNextRecorder(actx, showDialogs, selection))
     {
         actx->SetInitialTVState(true);
         HandleStateChange(actx, actx);
@@ -1715,7 +1720,8 @@ int TV::GetLastRecorderNum(int player_idx) const
     return ret;
 }
 
-bool TV::RequestNextRecorder(PlayerContext *ctx, bool showDialogs)
+bool TV::RequestNextRecorder(PlayerContext *ctx, bool showDialogs,
+                             const ChannelInfoList &selection)
 {
     if (!ctx)
         return false;
@@ -1728,6 +1734,24 @@ bool TV::RequestNextRecorder(PlayerContext *ctx, bool showDialogs)
         // If this is set we, already got a new recorder in SwitchCards()
         testrec = switchToRec;
         switchToRec = NULL;
+    }
+    else if (!selection.empty())
+    {
+        for (uint i = 0; i < selection.size(); i++)
+        {
+            uint    chanid  = selection[i].chanid;
+            QString channum = selection[i].channum;
+            if (!chanid || channum.isEmpty())
+                continue;
+            QSet<uint> cards = IsTunableOn(ctx, chanid, false, true);
+
+            if (chanid && !channum.isEmpty() && !cards.isEmpty())
+            {
+                testrec = RemoteGetExistingRecorder(*(cards.begin()));
+                initialChanID = chanid;
+                break;
+            }
+        }
     }
     else
     {
@@ -2223,7 +2247,9 @@ void TV::HandleStateChange(PlayerContext *mctx, PlayerContext *ctx)
 
         SET_NEXT();
 
-        uint chanid = gCoreContext->GetNumSetting("DefaultChanid", 0);
+        uint chanid = initialChanID;
+        if (!chanid)
+            chanid = gCoreContext->GetNumSetting("DefaultChanid", 0);
 
         if (chanid && !IsTunable(ctx, chanid))
             chanid = 0;
@@ -5829,7 +5855,8 @@ void TV::PxPToggleType(PlayerContext *mctx, bool wantPBP)
     if (wantPBP)
     {
         GetPlayer(mctx, 0)->SetPIPState(kPBPLeft);
-        GetPlayer(mctx, 1)->SetPIPState(kPBPRight);
+        if (player.size() > 1)
+            GetPlayer(mctx, 1)->SetPIPState(kPBPRight);
     }
     else
     {
@@ -8358,7 +8385,12 @@ void TV::ShowLCDDVDInfo(const PlayerContext *ctx)
 
 bool TV::IsTunable(const PlayerContext *ctx, uint chanid, bool use_cache)
 {
-    return !IsTunableOn(ctx,chanid,use_cache,true).empty();
+    return !IsTunableOn(this, ctx,chanid,use_cache,true).empty();
+}
+
+bool TV::IsTunable(uint chanid)
+{
+    return !IsTunableOn(NULL, NULL, chanid, false, true).empty();
 }
 
 static QString toCommaList(const QSet<uint> &list)
@@ -8376,7 +8408,16 @@ static QString toCommaList(const QSet<uint> &list)
 QSet<uint> TV::IsTunableOn(
     const PlayerContext *ctx, uint chanid, bool use_cache, bool early_exit)
 {
+    return IsTunableOn(this, ctx, chanid, use_cache, early_exit);
+}
+
+QSet<uint> TV::IsTunableOn(TV *tv,
+    const PlayerContext *ctx, uint chanid, bool use_cache, bool early_exit)
+{
     QSet<uint> tunable_cards;
+
+    if (tv == NULL)
+        use_cache = false;
 
     if (!chanid)
     {
@@ -8390,7 +8431,7 @@ QSet<uint> TV::IsTunableOn(
     mplexid = (32767 == mplexid) ? 0 : mplexid;
 
     vector<uint> excluded_cards;
-    if (ctx->recorder && ctx->pseudoLiveTVState == kPseudoNormalLiveTV)
+    if (ctx && ctx->recorder && ctx->pseudoLiveTVState == kPseudoNormalLiveTV)
         excluded_cards.push_back(ctx->GetCardID());
 
     uint sourceid = ChannelUtil::GetSourceIDForChannel(chanid);
@@ -8427,10 +8468,10 @@ QSet<uint> TV::IsTunableOn(
         bool used_cache = false;
         if (use_cache)
         {
-            QMutexLocker locker(&is_tunable_cache_lock);
-            if (is_tunable_cache_inputs.contains(cardids[i]))
+            QMutexLocker locker(&tv->is_tunable_cache_lock);
+            if (tv->is_tunable_cache_inputs.contains(cardids[i]))
             {
-                inputs = is_tunable_cache_inputs[cardids[i]];
+                inputs = tv->is_tunable_cache_inputs[cardids[i]];
                 used_cache = true;
             }
         }
@@ -8438,8 +8479,11 @@ QSet<uint> TV::IsTunableOn(
         if (!used_cache)
         {
             inputs = RemoteRequestFreeInputList(cardids[i], excluded_cards);
-            QMutexLocker locker(&is_tunable_cache_lock);
-            is_tunable_cache_inputs[cardids[i]] = inputs;
+            if (tv)
+            {
+                QMutexLocker locker(&tv->is_tunable_cache_lock);
+                tv->is_tunable_cache_inputs[cardids[i]] = inputs;
+            }
         }
 
 #if 0

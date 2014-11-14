@@ -201,6 +201,7 @@ MPEG2fixup::MPEG2fixup(const QString &inf, const QString &outf,
                        const char *fmt, int norp, int fixPTS, int maxf,
                        bool showprog, int otype, void (*update_func)(float),
                        int (*check_func)())
+           : inputFC(NULL)
 {
     displayFrame = 0;
 
@@ -268,6 +269,7 @@ MPEG2fixup::MPEG2fixup(const QString &inf, const QString &outf,
         const QFileInfo finfo(inf);
         filesize = finfo.size();
     }
+    allaudio = false;
 }
 
 MPEG2fixup::~MPEG2fixup()
@@ -502,7 +504,9 @@ int MPEG2replex::WaitBuffers()
 void *MPEG2fixup::ReplexStart(void *data)
 {
     MThread::ThreadSetup("MPEG2Replex");
-    MPEG2fixup *m2f = (MPEG2fixup *) data;
+    MPEG2fixup *m2f = static_cast<MPEG2fixup *>(data);
+    if (!m2f)
+        return NULL;
     m2f->rx.Start();
     MThread::ThreadCleanup();
     return NULL;
@@ -572,18 +576,21 @@ void MPEG2fixup::InitReplex()
     int mp2_count = 0, ac3_count = 0;
     for (FrameMap::Iterator it = aFrame.begin(); it != aFrame.end(); it++)
     {
-        int i = aud_map[it.key()];
+        int index = it.key();
+        if (index > inputFC->nb_streams)
+            continue;   // will never happen in practice
+        int i = aud_map[index];
         AVDictionaryEntry *metatag =
-            av_dict_get(inputFC->streams[it.key()]->metadata,
+            av_dict_get(inputFC->streams[index]->metadata,
                         "language", NULL, 0);
         char *lang = metatag ? metatag->value : (char *)"";
         ring_init(&rx.extrbuf[i], memsize / 5);
         ring_init(&rx.index_extrbuf[i], INDEX_BUF);
         rx.extframe[i].set = 1;
-        rx.extframe[i].bit_rate = getCodecContext(it.key())->bit_rate;
+        rx.extframe[i].bit_rate = getCodecContext(index)->bit_rate;
         rx.extframe[i].framesize = (*it)->first()->pkt.size;
         strncpy(rx.extframe[i].language, lang, 4);
-        switch(GetStreamType(it.key()))
+        switch(GetStreamType(index))
         {
             case AV_CODEC_ID_MP2:
             case AV_CODEC_ID_MP3:
@@ -737,7 +744,11 @@ bool MPEG2fixup::InitAV(QString inputfile, const char *type, int64_t offset)
     // Open recording
     LOG(VB_GENERAL, LOG_INFO, QString("Opening %1").arg(inputfile));
 
-    inputFC = NULL;
+    if (inputFC)
+    {
+        avformat_close_input(&inputFC);
+        inputFC = NULL;
+    }
 
     ret = avformat_open_input(&inputFC, ifname, fmt, NULL);
     if (ret)
@@ -745,6 +756,24 @@ bool MPEG2fixup::InitAV(QString inputfile, const char *type, int64_t offset)
         LOG(VB_GENERAL, LOG_ERR,
             QString("Couldn't open input file, error #%1").arg(ret));
         return false;
+    }
+
+    if (inputFC->iformat && !strcmp(inputFC->iformat->name, "mpegts") &&
+        gCoreContext->GetNumSetting("FFMPEGTS", false))
+    {
+        fmt = av_find_input_format("mpegts-ffmpeg");
+        if (fmt)
+        {
+            LOG(VB_PLAYBACK, LOG_INFO, "Using FFmpeg MPEG-TS demuxer (forced)");
+            avformat_close_input(&inputFC);
+            ret = avformat_open_input(&inputFC, ifname, fmt, NULL);
+            if (ret)
+            {
+                LOG(VB_GENERAL, LOG_ERR,
+                    QString("Couldn't open input file, error #%1").arg(ret));
+                return false;
+            }
+        }
     }
 
     mkvfile = !strcmp(inputFC->iformat->name, "mkv") ? 1 : 0;
@@ -777,10 +806,12 @@ bool MPEG2fixup::InitAV(QString inputfile, const char *type, int64_t offset)
                 break;
 
             case AVMEDIA_TYPE_AUDIO:
-                if (inputFC->streams[i]->codec->channels == 0)
+                if (!allaudio && ext_count > 0 &&
+                    inputFC->streams[i]->codec->channels < 2 &&
+                    inputFC->streams[i]->codec->sample_rate < 100000)
                 {
                     LOG(VB_GENERAL, LOG_ERR,
-                        QString("Skipping invalid audio stream: %1").arg(i));
+                        QString("Skipping audio stream: %1").arg(i));
                     break;
                 }
                 if (inputFC->streams[i]->codec->codec_id == AV_CODEC_ID_AC3 ||
@@ -1342,7 +1373,16 @@ int MPEG2fixup::GetFrame(AVPacket *pkt)
                 break;
 
             case AVMEDIA_TYPE_AUDIO:
-                aFrame[pkt->stream_index]->append(tmpFrame);
+                if (aFrame.contains(pkt->stream_index))
+                {
+                    aFrame[pkt->stream_index]->append(tmpFrame);
+                }
+                else
+                {
+                    LOG(VB_GENERAL, LOG_DEBUG,
+                        QString("Invalid stream ID %1, ignoring").arg(pkt->stream_index));
+                    framePool.enqueue(tmpFrame);
+                }
                 av_free_packet(pkt);
                 return 0;
 
@@ -2364,6 +2404,11 @@ int MPEG2fixup::Start()
 
             while (af->count())
             {
+                if (!CC || !CPC)
+                {
+                    framePool.enqueue(af->takeFirst());
+                    continue;
+                }
                 // What to do if the CC is corrupt?
                 // Just wait and hope it repairs itself
                 if (CC->sample_rate == 0 || !CPC || CPC->duration == 0)
