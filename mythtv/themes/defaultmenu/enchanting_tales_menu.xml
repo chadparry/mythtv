@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<mythmenu name="ENCHANTING_TALES">
+
+    <button>
+        <type>BEAUTY_AND_THE_BEAST</type>
+        <text>Beauty and the Beast</text>
+        <description>Enchanting Tales, page 6</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Beauty and the Beast.flac'</action>
+    </button>
+
+    <button>
+        <type>THE_LITTLE_MERMAID</type>
+        <text>The Little Mermaid</text>
+        <description>Enchanting Tales, page 42</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'The Little Mermaid.flac'</action>
+    </button>
+
+    <button>
+        <type>SNOW_WHITE_AND_THE_SEVEN_DWARFS</type>
+        <text>Snow White and the Seven Dwarfs</text>
+        <description>Enchanting Tales, page 84</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Snow White and the Seven Dwarfs.flac'</action>
+    </button>
+
+</mythmenu>

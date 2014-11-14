@@ -2,73 +2,24 @@
 <mythmenu name="AUDIOBOOKS">
 
     <button>
-        <type>CURIOUS_GEORGE</type>
+        <type>ADVENTURES_OF_CURIOUS_GEORGE</type>
         <text>Curious George</text>
-        <description>The Complete Adventures of Curious George, page 3</description>
-        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George (with page-turn signals).flac'</action>
+        <action>MENU curious_george_menu.xml</action>
+        <description>The Complete Adventures of Curious George</description>
     </button>
 
     <button>
-        <type>CURIOUS_GEORGE_TAKES_A_JOB</type>
-        <text>Curious George Takes a Job</text>
-        <description>The Complete Adventures of Curious George, page 57</description>
-        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George Takes a Job (with page-turn signals).flac'</action>
+        <type>ENCHANTING_TALES</type>
+        <text>Enchanting Tales</text>
+        <action>MENU enchanting_tales_menu.xml</action>
+        <description>Disney Princess: Enchanting Tales</description>
     </button>
 
     <button>
-        <type>CURIOUS_GEORGE_RIDES_A_BIKE</type>
-        <text>Curious George Rides a Bike</text>
-        <description>The Complete Adventures of Curious George, page 105</description>
-        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George Rides a Bike (with page-turn signals).flac'</action>
-    </button>
-
-    <button>
-        <type>CURIOUS_GEORGE_GETS_A_MEDAL</type>
-        <text>Curious George Gets a Medal</text>
-        <description>The Complete Adventures of Curious George, page 153</description>
-        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George Gets a Medal (with page-turn signals).flac'</action>
-    </button>
-
-    <button>
-        <type>CURIOUS_GEORGE_FLIES_A_KITE</type>
-        <text>Curious George Flies a Kite</text>
-        <description>The Complete Adventures of Curious George, page 201</description>
-        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George Flies a Kite (with page-turn signals).flac'</action>
-    </button>
-
-    <button>
-        <type>CURIOUS_GEORGE_LEARNS_THE_ALPHABET</type>
-        <text>Curious George Learns the Alphabet</text>
-        <description>The Complete Adventures of Curious George, page 281</description>
-        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George Learns the Alphabet (with page-turn signals).flac'</action>
-    </button>
-
-    <button>
-        <type>CURIOUS_GEORGE_GOES_TO_THE_HOSPITAL</type>
-        <text>Curious George Goes to the Hospital</text>
-        <description>The Complete Adventures of Curious George, page 353</description>
-        <action>EXEC /home/mythtv/bin/play-audiobook 'Curious George Goes to the Hospital (with page-turn signals).flac'</action>
-    </button>
-
-    <button>
-        <type>BEAUTY_AND_THE_BEAST</type>
-        <text>Beauty and the Beast</text>
-        <description>Enchanting Tales, page 6</description>
-        <action>EXEC /home/mythtv/bin/play-audiobook 'Beauty and the Beast.flac'</action>
-    </button>
-
-    <button>
-        <type>THE_LITTLE_MERMAID</type>
-        <text>The Little Mermaid</text>
-        <description>Enchanting Tales, page 42</description>
-        <action>EXEC /home/mythtv/bin/play-audiobook 'The Little Mermaid.flac'</action>
-    </button>
-
-    <button>
-        <type>SNOW_WHITE_AND_THE_SEVEN_DWARFS</type>
-        <text>Snow White and the Seven Dwarfs</text>
-        <description>Enchanting Tales, page 84</description>
-        <action>EXEC /home/mythtv/bin/play-audiobook 'Snow White and the Seven Dwarfs.flac'</action>
+        <type>PETE_THE_CAT</type>
+        <text>Pete the Cat</text>
+        <action>MENU pete_the_cat_menu.xml</action>
+        <description>Pete the Cat Series</description>
     </button>
 
     <button>
@@ -76,6 +27,76 @@
         <text>Little Piggy Rescue!</text>
         <description>The Wonder Pets!</description>
         <action>EXEC /home/mythtv/bin/play-audiobook 'Little Piggy Rescue!.flac'</action>
+    </button>
+
+    <button>
+        <type>BAD_CASE_OF_STRIPES</type>
+        <text>A Bad Case of Stripes</text>
+        <description>A Bad Case of Stripes</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'A Bad Case of Stripes.flac'</action>
+    </button>
+
+    <button>
+        <type>CHARLIE_GOES_TO_SCHOOL</type>
+        <text>Charlie Goes to School</text>
+        <description>Charlie Goes to School</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Charlie Goes to School.flac'</action>
+    </button>
+
+    <button>
+        <type>DUCK_ON_A_BIKE</type>
+        <text>Duck on a Bike</text>
+        <description>Duck on a Bike</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Duck on a Bike.flac'</action>
+    </button>
+
+    <button>
+        <type>DINOSAURS_GO_TO_SCHOOL</type>
+        <text>How Do Dinosaurs Go to School?</text>
+        <description>How Do Dinosaurs Go to School?</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'How Do Dinosaurs Go to School?.flac'</action>
+    </button>
+
+    <button>
+        <type>BULLY_GOAT</type>
+        <text>Llama Llama and the Bully Goat</text>
+        <description>Llama Llama and the Bully Goat</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Llama Llama and the Bully Goat.flac'</action>
+    </button>
+
+    <button>
+        <type>PICTURE_DAY_PERFECTION</type>
+        <text>Picture Day Perfection</text>
+        <description>Picture Day Perfection</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Picture Day Perfection.flac'</action>
+    </button>
+
+    <button>
+        <type>SECRET_PIZZA_PARTY</type>
+        <text>Secret Pizza Party</text>
+        <description>Secret Pizza Party</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Secret Pizza Party.flac'</action>
+    </button>
+
+    <button>
+        <type>RAIN_CAME_DOWN</type>
+        <text>The Rain Came Down</text>
+        <description>The Rain Came Down</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'The Rain Came Down.flac'</action>
+    </button>
+
+    <button>
+        <type>SWALLOWED_FLY</type>
+        <text>There Was an Old Lady Who Swallowed a Fly!</text>
+        <description>There Was an Old Lady Who Swallowed a Fly!</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'There Was an Old Lady Who Swallowed a Fly!.flac'</action>
+    </button>
+
+    <button>
+        <type>TEACHERS_LOUNGE</type>
+        <text>What I Saw in the Teachers' Lounge</text>
+        <description>What I Saw in the Teachers' Lounge</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook "What I Saw in the Teachers' Lounge.flac"</action>
     </button>
 
 </mythmenu>
