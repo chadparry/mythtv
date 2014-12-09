@@ -65,42 +65,42 @@
         <type>COLBERT</type>
         <text>Colbert Nation</text>
         <description>The Colbert Report - Full Episode Video</description>
-        <action>EXEC lircfirefox.py /usr/bin/firefox 'http://www.colbertnation.com/full-episodes/'</action>
+        <action>EXEC /usr/local/bin/lircfirefox.py /usr/bin/firefox 'http://www.colbertnation.com/full-episodes/'</action>
     </button>
 
     <button>
         <type>DAILY_SHOW</type>
         <text>The Daily Show</text>
         <description>The Daily Show with Jon Stewart - Full Episode Video</description>
-        <action>EXEC lircfirefox.py /usr/bin/firefox 'http://www.thedailyshow.com/full-episodes'</action>
+        <action>EXEC /usr/local/bin/lircfirefox.py /usr/bin/firefox 'http://www.thedailyshow.com/full-episodes'</action>
     </button>
 
     <button>
         <type>AMAZON_VIDEO</type>
         <text>Amazon Instant Video</text>
         <description>Amazon.com: Your Video Library</description>
-        <action>EXEC lircfirefox.py /usr/bin/firefox 'https://www.amazon.com/gp/video/library'</action>
+        <action>EXEC /usr/local/bin/lircfirefox.py /usr/bin/firefox 'https://www.amazon.com/gp/video/library'</action>
     </button>
 
     <button>
-        <type>NETFLIX</type>
+        <type>NETFLIX_STREAMING</type>
         <text>Netflix</text>
         <description>Netflix.com</description>
-        <action>EXEC lircfirefox.py /usr/bin/google-chrome --app='http://www.netflix.com/'</action>
+        <action>EXEC /usr/local/bin/lircfirefox.py /usr/bin/google-chrome --kiosk 'http://www.netflix.com/'</action>
     </button>
 
     <button>
         <type>LDS_CONFERENCE</type>
         <text>General Conference</text>
         <description>Watch Sessions of LDS General Conference</description>
-        <action>EXEC lircfirefox.py /usr/bin/firefox 'http://www.lds.org/general-conference/sessions/'</action>
+        <action>EXEC /usr/local/bin/lircfirefox.py /usr/bin/firefox 'http://www.lds.org/general-conference/sessions/'</action>
     </button>
 
     <button>
         <type>SESAME_STREET</type>
         <text>Sesame Street</text>
         <description>Sesame Street Videos</description>
-        <action>EXEC lircfirefox.py /usr/bin/firefox 'http://www.sesamestreet.org/videos'</action>
+        <action>EXEC /usr/local/bin/lircfirefox.py /usr/bin/firefox 'http://www.sesamestreet.org/videos'</action>
     </button>
 
     <button>

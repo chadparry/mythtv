@@ -16,10 +16,17 @@
     </button>
 
     <button>
-        <type>PETE_THE_CAT</type>
-        <text>Pete the Cat</text>
-        <action>MENU pete_the_cat_menu.xml</action>
-        <description>Pete the Cat Series</description>
+        <type>FOUR_GROOVY_BUTTONS</type>
+        <text>Pete the Cat and His Four Groovy Buttons</text>
+        <description>Pete the Cat and His Four Groovy Buttons</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Pete the Cat/Pete the Cat and His Four Groovy Buttons.flac'</action>
+    </button>
+
+    <button>
+        <type>WHITE_SHOES</type>
+        <text>I Love My White Shoes</text>
+        <description>Pete the Cat: I Love My White Shoes</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Pete the Cat/Pete the Cat: I Love My White Shoes.flac'</action>
     </button>
 
     <button>
