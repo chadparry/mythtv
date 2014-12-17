@@ -38,7 +38,7 @@ static int run(MythMediaDevice *dev = NULL, bool startRandomShow = false)
         {
             if (startRandomShow)
             {
-                iconview->HandleRandomShow();
+                iconview->HandleSeasonalShow();
             }
             else
             {
