@@ -114,6 +114,7 @@ def ffox(args):
                 #log.flush()
     except KeyboardInterrupt:
         #print >>log, "Exiting...."
+        pass
 
     # Locate child processes
     ps_command = subprocess.Popen(["ps", "-o", "pid", "--ppid", str(ffox.pid), "--noheaders"], stdout = subprocess.PIPE)
