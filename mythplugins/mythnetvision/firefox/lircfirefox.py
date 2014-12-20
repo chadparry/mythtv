@@ -89,7 +89,8 @@ def ffox(args):
                     config[3] = str(int(config[3]) * mousestep ** 2)
                 subprocess.Popen(["xdotool"] + config)
     except KeyboardInterrupt:
-        print "Exiting...."
+        #print "Exiting...."
+        pass
 
     # Locate child processes
     ps_command = subprocess.Popen(["ps", "-o", "pid", "--ppid", str(ffox.pid), "--noheaders"], stdout = subprocess.PIPE)
