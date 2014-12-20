@@ -16,12 +16,17 @@ import pylirc
 import signal
 import subprocess
 import sys
+import threading
 import time
 
 VOLUME_MIN = 0L
 VOLUME_MAX = 100L
 VOLUME_DEFAULT = 50L
 VOLUME_STEP = 2L
+RELEASE_KEY_DELAY = 1
+
+repeat_lock = threading.Lock()
+release_key_token = None
 
 def main(args):
     """
@@ -38,18 +43,31 @@ def main(args):
         if has_dpms:
             subprocess.Popen(["xset", "+dpms"])
 
+def release_key(expected_key_token):
+    global release_key_token
+    with repeat_lock:
+        if release_key_token is expected_key_token:
+            release_key_token = None
+            subprocess.Popen(["xdotool", "key", "--clearmodifiers", "--", "Right"])
+
 def ffox(args):
+    global release_key_token
     ffox = subprocess.Popen(args[1:])
     mixer = alsaaudio.Mixer()
     lastvolume = mixer.getvolume()[0]
     mute = lastvolume == 0
     try:
-        if not pylirc.init("firefox", lircfirefox_config.SHARE_DIR + "/mythnetvision/lirc.firefox", 1):
+        if not pylirc.init("firefox", lircfirefox_config.SHARE_DIR + "/mythnetvision/lirc.firefox"):
             return "Failed"
         stop = False
         while not stop:
+            with repeat_lock:
+                is_blocking = release_key_token is None
+            pylirc.blocking(is_blocking)
             codes = pylirc.nextcode(1)
-            if codes is None:
+            if not codes:
+                if not is_blocking:
+                    time.sleep(0.05)
                 continue
             for code in codes:
                 #print code
@@ -83,6 +101,38 @@ def ffox(args):
                     else:
                         volume = lastvolume
                     mixer.setvolume(volume)
+                    break
+                if config[0] == "SMSJUMP":
+                    keys = config[1:]
+                    config = ['key', '--clearmodifiers', '--']
+                    with repeat_lock:
+                        if release_key_token is not None and repeat_keys == keys:
+                            repeat_index += 1
+                            current = keys[repeat_index % len(keys)]
+                            config.append(current)
+                        else:
+                            if release_key_token is not None:
+                                config.append('Right')
+                            repeat_keys = keys
+                            repeat_index = 0
+                            config.append(keys[0])
+                        config.append('Shift+Left')
+                        subprocess.Popen(["xdotool"] + config)
+                        if release_key_token is not None:
+                            release_key_timer.cancel()
+                        release_key_token = object()
+                        release_key_timer = threading.Timer(RELEASE_KEY_DELAY, release_key, [release_key_token])
+                        release_key_timer.start()
+                        break
+                if config[0] == "KEY":
+                    keys = config[1:]
+                    config = ['key', '--clearmodifiers', '--']
+                    with repeat_lock:
+                        if release_key_token is not None:
+                            release_key_token = None
+                            release_key_timer.cancel()
+                            config.append('Right')
+                    config.extend(keys)
                 if config[0] == "mousemove_relative":
                     mousestep = min(code["repeat"], 10)
                     config[2] = str(int(config[2]) * mousestep ** 2)
