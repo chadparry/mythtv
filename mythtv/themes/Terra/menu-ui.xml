@@ -529,11 +529,6 @@
                                 <filename>../default/kids.jpg</filename>
                             </imagetype>
                         </state>
-                        <state name="COLBERT" from="default">
-                            <imagetype name="icon">
-                                <filename>../default/colbert.jpg</filename>
-                            </imagetype>
-                        </state>
                         <state name="DAILY_SHOW" from="default">
                             <imagetype name="icon">
                                 <filename>../default/dailyshow.jpg</filename>
@@ -1022,11 +1017,6 @@
                         <state name="PARRY_CHANNEL_KIDS" from="default">
                             <imagetype name="icon">
                                 <filename>../default/kids.jpg</filename>
-                            </imagetype>
-                        </state>
-                        <state name="COLBERT" from="default">
-                            <imagetype name="icon">
-                                <filename>../default/colbert.jpg</filename>
                             </imagetype>
                         </state>
                         <state name="DAILY_SHOW" from="default">
