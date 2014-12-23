@@ -949,22 +949,6 @@
                                 <filename>watermarks/internet.jpg</filename>
                             </imagetype>
                         </state>
-<<<<<<< HEAD
-                        <state name="COLBERT" from="default">
-                            <imagetype name="icon">
-                                <filename>../default/colbert.jpg</filename>
-=======
-                        <state name="PARRY_CHANNEL" from="default">
-                            <imagetype name="icon">
-                                <filename>../default/wedding.jpg</filename>
-                            </imagetype>
-                        </state>
-                        <state name="PARRY_CHANNEL_KIDS" from="default">
-                            <imagetype name="icon">
-                                <filename>../default/kids.jpg</filename>
->>>>>>> c1a632b... Remove Colbert Nation
-                            </imagetype>
-                        </state>
                         <state name="DAILY_SHOW" from="default">
                             <imagetype name="icon">
                                 <filename>../default/dailyshow.jpg</filename>
