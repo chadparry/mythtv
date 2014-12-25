@@ -106,4 +106,11 @@
         <action>EXEC /home/mythtv/bin/play-audiobook "What I Saw in the Teachers' Lounge.flac"</action>
     </button>
 
+    <button>
+        <type>COOL_SCHOOL_TRIP</type>
+        <text>Splat and the Cool School Trip</text>
+        <description>Splat and the Cool School Trip</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Splat and the Cool School Trip.flac'</action>
+    </button>
+
 </mythmenu>
