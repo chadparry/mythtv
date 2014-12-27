@@ -113,4 +113,11 @@
         <action>EXEC /home/mythtv/bin/play-audiobook 'Splat and the Cool School Trip.flac'</action>
     </button>
 
+    <button>
+        <type>NIGHT_BEFORE_CHRISTMAS</type>
+        <text>The Night Before Christmas</text>
+        <description>Jan Brett's Night Before Christmas</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'The Night Before Christmas.mkv'</action>
+    </button>
+
 </mythmenu>
