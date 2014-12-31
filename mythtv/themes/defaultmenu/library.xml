@@ -83,6 +83,13 @@
     </button>
 
     <button>
+        <type>YOUTUBE</type>
+        <text>YouTube</text>
+        <description>YouTube.com: My Subscriptions</description>
+        <action>EXEC /usr/local/bin/lircfirefox.py /usr/bin/google-chrome --kiosk 'https://www.youtube.com/feed/subscriptions'</action>
+    </button>
+
+    <button>
         <type>LDS_CONFERENCE</type>
         <text>General Conference</text>
         <description>Watch Sessions of LDS General Conference</description>

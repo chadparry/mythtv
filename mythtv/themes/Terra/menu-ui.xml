@@ -544,6 +544,11 @@
                                 <filename>../default/Netflix_Web_Logo.jpg</filename>
                             </imagetype>
                         </state>
+                        <state name="YOUTUBE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/YouTube.png</filename>
+                            </imagetype>
+                        </state>
                         <state name="LDS_CONFERENCE" from="default">
                             <imagetype name="icon">
                                 <filename>../default/lds-conference.jpg</filename>
@@ -1032,6 +1037,11 @@
                         <state name="NETFLIX_STREAMING" from="default">
                             <imagetype name="icon">
                                 <filename>../default/Netflix_Web_Logo.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="YOUTUBE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/YouTube.png</filename>
                             </imagetype>
                         </state>
                         <state name="LDS_CONFERENCE" from="default">
