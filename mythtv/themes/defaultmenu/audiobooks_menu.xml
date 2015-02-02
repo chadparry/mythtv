@@ -30,6 +30,13 @@
     </button>
 
     <button>
+        <type>SCHOOL_SHOES</type>
+        <text>Rocking in My School Shoes</text>
+        <description>Pete the Cat: Rocking in My School Shoes</description>
+        <action>EXEC /home/mythtv/bin/play-audiobook 'Pete the Cat/Pete the Cat: Rocking in My School Shoes.wav'</action>
+    </button>
+
+    <button>
         <type>LITTLE_PIGGY_RESCUE</type>
         <text>Little Piggy Rescue!</text>
         <description>The Wonder Pets!</description>
