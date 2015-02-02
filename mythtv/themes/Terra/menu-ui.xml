@@ -564,6 +564,11 @@
                                 <filename>../default/audiobooks/cover.jpg</filename>
                             </imagetype>
                         </state>
+                        <state name="ADVENTURES_OF_CURIOUS_GEORGE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/The Complete Adventures of Curious George.jpg</filename>
+                            </imagetype>
+                        </state>
                         <state name="CURIOUS_GEORGE" from="default">
                             <imagetype name="icon">
                                 <filename>../default/audiobooks/Curious George.jpg</filename>
@@ -599,6 +604,11 @@
                                 <filename>../default/audiobooks/Curious George Goes to the Hospital.jpg</filename>
                             </imagetype>
                         </state>
+                        <state name="ENCHANTING_TALES" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Enchanting Tales.jpg</filename>
+                            </imagetype>
+                        </state>
                         <state name="BEAUTY_AND_THE_BEAST" from="default">
                             <imagetype name="icon">
                                 <filename>../default/audiobooks/Beauty and the Beast.jpg</filename>
@@ -614,9 +624,84 @@
                                 <filename>../default/audiobooks/Snow White and the Seven Dwarfs.jpg</filename>
                             </imagetype>
                         </state>
+                        <state name="FOUR_GROOVY_BUTTONS" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Pete the Cat and His Four Groovy Buttons.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="WHITE_SHOES" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Pete the Cat: I Love My White Shoes.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="SCHOOL_SHOES" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Pete the Cat: Rocking in My School Shoes.jpg</filename>
+                            </imagetype>
+                        </state>
                         <state name="LITTLE_PIGGY_RESCUE" from="default">
                             <imagetype name="icon">
                                 <filename>../default/audiobooks/Little Piggy Rescue!.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="BAD_CASE_OF_STRIPES" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/A Bad Case of Stripes.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CHARLIE_GOES_TO_SCHOOL" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Charlie Goes to School.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="DUCK_ON_A_BIKE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Duck on a Bike.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="DINOSAURS_GO_TO_SCHOOL" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/How Do Dinosaurs Go to School?.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="BULLY_GOAT" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Llama Llama and the Bully Goat.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="PICTURE_DAY_PERFECTION" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Picture Day Perfection.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="SECRET_PIZZA_PARTY" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Secret Pizza Party.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="RAIN_CAME_DOWN" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/The Rain Came Down.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="SWALLOWED_FLY" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/There Was an Old Lady Who Swallowed a Fly!.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="TEACHERS_LOUNGE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/What I Saw in the Teachers' Lounge.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="COOL_SCHOOL_TRIP" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Splat and the Cool School Trip.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="NIGHT_BEFORE_CHRISTMAS" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/The Night Before Christmas.jpg</filename>
                             </imagetype>
                         </state>
                     </statetype>
@@ -1059,6 +1144,11 @@
                                 <filename>../default/audiobooks/cover.jpg</filename>
                             </imagetype>
                         </state>
+                        <state name="ADVENTURES_OF_CURIOUS_GEORGE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/The Complete Adventures of Curious George.jpg</filename>
+                            </imagetype>
+                        </state>
                         <state name="CURIOUS_GEORGE" from="default">
                             <imagetype name="icon">
                                 <filename>../default/audiobooks/Curious George.jpg</filename>
@@ -1094,6 +1184,11 @@
                                 <filename>../default/audiobooks/Curious George Goes to the Hospital.jpg</filename>
                             </imagetype>
                         </state>
+                        <state name="ENCHANTING_TALES" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Enchanting Tales.jpg</filename>
+                            </imagetype>
+                        </state>
                         <state name="BEAUTY_AND_THE_BEAST" from="default">
                             <imagetype name="icon">
                                 <filename>../default/audiobooks/Beauty and the Beast.jpg</filename>
@@ -1109,9 +1204,84 @@
                                 <filename>../default/audiobooks/Snow White and the Seven Dwarfs.jpg</filename>
                             </imagetype>
                         </state>
+                        <state name="FOUR_GROOVY_BUTTONS" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Pete the Cat and His Four Groovy Buttons.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="WHITE_SHOES" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Pete the Cat: I Love My White Shoes.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="SCHOOL_SHOES" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Pete the Cat: Rocking in My School Shoes.jpg</filename>
+                            </imagetype>
+                        </state>
                         <state name="LITTLE_PIGGY_RESCUE" from="default">
                             <imagetype name="icon">
                                 <filename>../default/audiobooks/Little Piggy Rescue!.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="BAD_CASE_OF_STRIPES" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/A Bad Case of Stripes.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="CHARLIE_GOES_TO_SCHOOL" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Charlie Goes to School.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="DUCK_ON_A_BIKE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Duck on a Bike.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="DINOSAURS_GO_TO_SCHOOL" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/How Do Dinosaurs Go to School?.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="BULLY_GOAT" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Llama Llama and the Bully Goat.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="PICTURE_DAY_PERFECTION" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Picture Day Perfection.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="SECRET_PIZZA_PARTY" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Secret Pizza Party.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="RAIN_CAME_DOWN" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/The Rain Came Down.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="SWALLOWED_FLY" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/There Was an Old Lady Who Swallowed a Fly!.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="TEACHERS_LOUNGE" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/What I Saw in the Teachers' Lounge.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="COOL_SCHOOL_TRIP" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/Splat and the Cool School Trip.jpg</filename>
+                            </imagetype>
+                        </state>
+                        <state name="NIGHT_BEFORE_CHRISTMAS" from="default">
+                            <imagetype name="icon">
+                                <filename>../default/audiobooks/The Night Before Christmas.jpg</filename>
                             </imagetype>
                         </state>
                     </statetype>
